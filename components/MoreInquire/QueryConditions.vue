@@ -84,14 +84,29 @@
                 </div>
                 <div
                   v-b-tooltip.hover="{ variant: 'primary' }"
-                  title="查詢年份僅限民國90年以後，若無法查詢請更改統計期區間。"
+                  title="查詢年份僅限民國90年至民國115年，若無法查詢請更改統計期區間。"
                 >
                   <Checkboxbtn
                     :key="key"
                     value="行業_8"
-                    label="行業標準分類第8-11次修訂(90年之後)"
-                    :disabled="startyear >= 90 || endyear >= 90 ? false : true"
+                    label="行業標準分類第8-11次修訂(90年-115年之後)"
+                    :disabled="startyear <= 115 && endyear >= 90 ? false : true"
                     @changedcheck="classestoggle($event, '行業_8')"
+                  >
+                  </Checkboxbtn>
+                </div>
+                <div
+                  v-b-tooltip.hover="{ variant: 'primary' }"
+                  title="查詢年份僅限民國105年以後，若無法查詢請更改統計期區間。"
+                >
+                  <Checkboxbtn
+                    :key="key"
+                    value="行業_12"
+                    label="行業標準分類第12次修訂(105年之後)"
+                    :disabled="
+                      startyear >= 105 || endyear >= 105 ? false : true
+                    "
+                    @changedcheck="classestoggle($event, '行業_12')"
                   >
                   </Checkboxbtn>
                 </div>
@@ -381,6 +396,7 @@ export default {
         '行業_6',
         '行業_7',
         '行業_8',
+        '行業_12',
         '職業_5',
         '職業_6',
         '從業身分',

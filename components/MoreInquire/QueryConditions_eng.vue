@@ -86,14 +86,30 @@
                 <div
                   v-b-tooltip.hover="{ variant: 'primary' }"
                   class="idusty"
-                  title="can only be searched after 2001."
+                  title="Can only be searched between 2001 and 2026."
                 >
                   <Checkboxbtn
                     :key="key"
                     value="行業_8"
-                    :disabled="startyear >= 90 || endyear >= 90 ? false : true"
-                    label="The eighth-tenth revised edition of standard industrial classification system (After 2001)"
+                    :disabled="startyear <= 115 && endyear >= 90 ? false : true"
+                    label="The eighth-eleventh revised edition of standard industrial classification system (2001-2026)"
                     @changedcheck="classestoggle($event, '行業_8')"
+                  >
+                  </Checkboxbtn>
+                </div>
+                <div
+                  v-b-tooltip.hover="{ variant: 'primary' }"
+                  class="idusty"
+                  title="Can only be searched after 2016."
+                >
+                  <Checkboxbtn
+                    :key="key"
+                    value="行業_12"
+                    :disabled="
+                      startyear >= 105 || endyear >= 105 ? false : true
+                    "
+                    label="The twelfth revised edition of standard industrial classification system (After 2016)"
+                    @changedcheck="classestoggle($event, '行業_12')"
                   >
                   </Checkboxbtn>
                 </div>
@@ -362,6 +378,7 @@ export default {
         '行業_6',
         '行業_7',
         '行業_8',
+        '行業_12',
         '職業_5',
         '職業_6',
         '從業身分',

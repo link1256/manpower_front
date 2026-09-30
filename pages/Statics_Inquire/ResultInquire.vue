@@ -913,6 +913,156 @@
           <!-- ind8設定畫圖Start -->
         </v-container>
       </div>
+      <div v-if="ind12_show" class="tableitem">
+        <v-container class="contanierNonMaxWidth">
+          <div v-if="ind12_items.length === 0" class="tableitemfade">
+            <img src="@/assets/images/Spin_GIF.gif" class="fadespin" alt="" />
+          </div>
+          <v-row>
+            <v-col>
+              <span class="titlespan">{{ ind12_title }}</span>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <span style="font-size: 1em; color: #292B3B;"
+                >*90-100 年為第8次修訂，101-105
+                年為第9次修訂，106-110年為第10次修訂，111年以後為第11次修訂</span
+              >
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="AllLeft">
+              <div class="ui large buttons">
+                <button
+                  :class="ind12_table ? 'ui button active' : 'ui button'"
+                  role="tab"
+                  :aria-selected="ind12_table"
+                  @click="ind12_table = true"
+                >
+                  統計表
+                </button>
+                <div class="or"></div>
+                <button
+                  :class="ind12_table ? 'ui button' : 'ui button active'"
+                  role="tab"
+                  :aria-selected="ind12_drawset"
+                  @click="ind12_drawset = true"
+                >
+                  統計圖
+                </button>
+              </div>
+            </v-col>
+            <v-col class="AllRight">
+              <button
+                v-if="ind12_table == false"
+                class="showbtn"
+                @click="ind12_drawset = true"
+              >
+                <img
+                  src="@/assets/images/Btn_Image/edit.svg"
+                  style="margin-bottom: 4px;"
+                  alt=""
+                />
+                內容設定
+              </button>
+              <downloadbtn2
+                v-if="ind12_table == true"
+                :items="[{ title: '下載XLSX' }, { title: '下載ODS' }]"
+                @downloadclick2="downloadfile12"
+              ></downloadbtn2>
+              <downloadbtn
+                v-if="ind12_table == false"
+                @downloadclick="downloadImage12"
+              ></downloadbtn>
+            </v-col>
+          </v-row>
+          <v-row v-if="ind12_table === true && ind12_items.length > 0">
+            <v-col :id="'table12'">
+              <VuePivottable
+                :items="ind12_items"
+                :pkey="ind12_idx"
+                :tablerows="tablerows"
+                :tablecols="tablecols"
+                :values="values"
+                :needref="needref"
+                :sex-sort="sex_sort"
+                :statistics-sort="statistics_sort"
+                :classes-sort="ind12_sort"
+                :default-format="defaultFormat"
+                :format-list="formatList"
+              ></VuePivottable>
+            </v-col>
+          </v-row>
+          <v-row v-if="ind12_table === true && ind12_items.length === 0">
+            <v-col>
+              <div class="tablezone2"></div>
+            </v-col>
+          </v-row>
+          <v-row v-if="ind12_table === false">
+            <v-col>
+              <highcharts
+                ref="chart12"
+                :key="hkey12"
+                :options="ind12ChartOption"
+                class="tablezone"
+              ></highcharts>
+            </v-col>
+          </v-row>
+          <v-row v-if="ind12_table === false">
+            <v-col class="AllRight chartinfo">
+              <div>
+                <span>* 點擊圖例中項目可暫時關閉該項目</span>
+                <br />
+                <span>* 可用滑鼠拖曳產生區域放大搭配水平卷軸檢視</span>
+              </div>
+            </v-col>
+          </v-row>
+          <!-- ind12設定畫圖Start -->
+          <v-dialog
+            v-model="ind12_drawset"
+            persistent
+            scrollable
+            retain-focus
+            max-width="500"
+          >
+            <div
+              ref="dialogContent"
+              class="modal-content"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="dialog-title"
+            >
+              <div
+                class="dialogclose"
+                tabindex="0"
+                role="button"
+                aria-label="關閉"
+                @click="ind12_drawset = false"
+                @keyup.enter="ind12_drawset = false"
+              >
+                X
+              </div>
+              <div class="modal-header AllCenter">
+                <label>統計圖-內容設定</label>
+              </div>
+              <div class="modal-body">
+                <drawset
+                  :key="ind12_idx"
+                  :show="ind12_drawset"
+                  :classtype="2"
+                  :statitems="editstat"
+                  :hassex="true"
+                  :sexitems="editsex"
+                  @closeConditions="ind12_drawset = false"
+                  @drawthis="drawind12"
+                ></drawset>
+              </div>
+            </div>
+          </v-dialog>
+          <!-- ind12設定畫圖Start -->
+        </v-container>
+      </div>
       <div v-if="occ5_show" class="tableitem">
         <v-container class="contanierNonMaxWidth">
           <div v-if="occ5_items.length === 0" class="tableitemfade">
@@ -2266,6 +2416,7 @@ export default {
       ind6_show: false,
       ind7_show: false,
       ind8_show: false,
+      ind12_show: false,
       occ5_show: false,
       occ6_show: false,
       cow_show: false,
@@ -2277,6 +2428,7 @@ export default {
       ind6_idx: 0,
       ind7_idx: 0,
       ind8_idx: 0,
+      ind12_idx: 0,
       occ5_idx: 0,
       occ6_idx: 0,
       cow_idx: 0,
@@ -2305,6 +2457,10 @@ export default {
       ind8_items: [],
       ind8_data: [],
       ind8_sort: [],
+      ind12_title: '',
+      ind12_items: [],
+      ind12_data: [],
+      ind12_sort: [],
       occ5_title: '',
       occ5_items: [],
       occ5_data: [],
@@ -2356,6 +2512,7 @@ export default {
       ind6ChartOption: {},
       ind7ChartOption: {},
       ind8ChartOption: {},
+      ind12ChartOption: {},
       occ5ChartOption: {},
       occ6ChartOption: {},
       cowChartOption: {},
@@ -2367,6 +2524,7 @@ export default {
       ind6_table: true,
       ind7_table: true,
       ind8_table: true,
+      ind12_table: true,
       occ5_table: true,
       occ6_table: true,
       cow_table: true,
@@ -2378,6 +2536,7 @@ export default {
       ind6_drawset: false,
       ind7_drawset: false,
       ind8_drawset: false,
+      ind12_drawset: false,
       occ5_drawset: false,
       occ6_drawset: false,
       cow_drawset: false,
@@ -2390,6 +2549,7 @@ export default {
       ind6_obj: null,
       ind7_obj: null,
       ind8_obj: null,
+      ind12_obj: null,
       occ5_obj: null,
       occ6_obj: null,
       cow_obj: null,
@@ -2407,6 +2567,7 @@ export default {
       hkey9: 0,
       hkey10: 0,
       hkey11: 0,
+      hkey12: 0,
       overlay: false
     }
   },
@@ -2427,6 +2588,9 @@ export default {
       if (val === true) this.needref = true
     },
     ind8_table(val) {
+      if (val === true) this.needref = true
+    },
+    ind12_table(val) {
       if (val === true) this.needref = true
     },
     occ5_table(val) {
@@ -2480,6 +2644,13 @@ export default {
       }
     },
     ind8_drawset(val) {
+      if (val) {
+        this.$nextTick(() => {
+          this.trapFocus()
+        })
+      }
+    },
+    ind12_drawset(val) {
       if (val) {
         this.$nextTick(() => {
           this.trapFocus()
@@ -2546,6 +2717,7 @@ export default {
       .replace('行業_6', '行業標準分類第6次修訂')
       .replace('行業_7', '行業標準分類第7次修訂')
       .replace('行業_8', '行業標準分類第8-11次修訂')
+      .replace('行業_12', '行業標準分類第12次修訂')
       .replace('職業_5', '職業標準分類第5次修訂')
       .replace('職業_6', '職業標準分類第6次修訂')
 
@@ -2749,6 +2921,10 @@ export default {
             vm.ind8_title = vm.getROCTitle('IND8')
             vm.ind8_show = true
             break
+          case '行業_12':
+            vm.ind12_title = vm.getROCTitle('IND12')
+            vm.ind12_show = true
+            break
           case '職業_5':
             vm.occ5_title = vm.getROCTitle('OCC5')
             vm.occ5_show = true
@@ -2861,6 +3037,16 @@ export default {
                   show: data.IND8_SORT[i].show
                 })
             }
+            if (data.IND12) {
+              vm.ind12_items = data.IND12
+              vm.ind12_data = data.IND12
+              for (let i = 0; i < data.IND12_SORT.length; i++)
+                vm.ind12_sort.push({
+                  name: data.IND12_SORT[i].name,
+                  level: data.IND12_SORT[i].level,
+                  show: data.IND12_SORT[i].show
+                })
+            }
             if (data.OCC5) {
               vm.occ5_items = data.OCC5
               vm.occ5_data = data.OCC5
@@ -2952,6 +3138,12 @@ export default {
       if (this.ind8_items.length > 0) {
         const table = tables[i]
         const layout = this.ind8_sort
+        this.setstatisticscolor(table, layout)
+        i++
+      }
+      if (this.ind12_items.length > 0) {
+        const table = tables[i]
+        const layout = this.ind12_sort
         this.setstatisticscolor(table, layout)
         i++
       }
@@ -3072,6 +3264,9 @@ export default {
         case 'IND8':
           sttr = '行業標準分類第8-11次修訂'
           break
+        case 'IND12':
+          sttr = '行業標準分類第12次修訂'
+          break
         case 'OCC5':
           sttr = '職業標準分類第5次修訂'
           break
@@ -3167,6 +3362,15 @@ export default {
       for (let i = 0; i < this.ind8_sort.length; i++) {
         if (this.ind8_sort[i].name === a) ia = i
         if (this.ind8_sort[i].name === b) ib = i
+      }
+      return ia - ib
+    },
+    ind12sort(a, b) {
+      let ia = 0
+      let ib = 0
+      for (let i = 0; i < this.ind12_sort.length; i++) {
+        if (this.ind12_sort[i].name === a) ia = i
+        if (this.ind12_sort[i].name === b) ib = i
       }
       return ia - ib
     },
@@ -3361,6 +3565,7 @@ export default {
       this.ind6_idx = this.ind6_idx + 1
       this.ind7_idx = this.ind7_idx + 1
       this.ind8_idxs = this.ind8_idxs + 1
+      this.ind12_idx = this.ind12_idx + 1
       this.occ5_idx = this.occ5_idx + 1
       this.occ6_idx = this.occ6_idx + 1
       this.cow_idx = this.cow_idx + 1
@@ -3498,6 +3703,7 @@ export default {
       this.ind6_show = false
       this.ind7_show = false
       this.ind8_show = false
+      this.ind12_show = false
       this.occ5_show = false
       this.occ6_show = false
       this.cow_show = false
@@ -3528,6 +3734,9 @@ export default {
           case '行業標準分類第8-11次修訂':
             this.ind8_show = true
             break
+          case '行業標準分類第12次修訂':
+            this.ind12_show = true
+            break
           case '職業標準分類第5次修訂':
             this.occ5_show = true
             break
@@ -3549,6 +3758,7 @@ export default {
       let ind6data = this.ind6_data
       let ind7data = this.ind7_data
       let ind8data = this.ind8_data
+      let ind12data = this.ind12_data
       let occ5data = this.occ5_data
       let occ6data = this.occ6_data
       let cowdata = this.cow_data
@@ -3562,6 +3772,7 @@ export default {
         ind6data = ind6data.filter((n) => n.strow !== sexes[i])
         ind7data = ind7data.filter((n) => n.s !== sexes[i])
         ind8data = ind8data.filter((n) => n.s !== sexes[i])
+        ind12data = ind12data.filter((n) => n.s !== sexes[i])
         occ5data = occ5data.filter((n) => n.s !== sexes[i])
         occ6data = occ6data.filter((n) => n.s !== sexes[i])
         cowdata = cowdata.filter((n) => n.s !== sexes[i])
@@ -3575,6 +3786,7 @@ export default {
         ind6data = ind6data.filter((n) => !n.st.includes(stats[i]))
         ind7data = ind7data.filter((n) => !n.st.includes(stats[i]))
         ind8data = ind8data.filter((n) => !n.st.includes(stats[i]))
+        ind12data = ind12data.filter((n) => !n.st.includes(stats[i]))
         occ5data = occ5data.filter((n) => !n.st.includes(stats[i]))
         occ6data = occ6data.filter((n) => !n.st.includes(stats[i]))
         cowdata = cowdata.filter((n) => !n.st.includes(stats[i]))
@@ -3651,6 +3863,7 @@ export default {
       this.ind6_items = ind6data
       this.ind7_items = ind7data
       this.ind8_items = ind8data
+      this.ind12_items = ind12data
       this.occ5_items = occ5data
       this.occ6_items = occ6data
       this.cow_items = cowdata
@@ -3664,6 +3877,7 @@ export default {
       this.ind6_idx = this.ind6_idx + 1
       this.ind7_idx = this.ind7_idx + 1
       this.ind8_idxs = this.ind8_idxs + 1
+      this.ind12_idx = this.ind12_idx + 1
       this.occ5_idx = this.occ5_idx + 1
       this.occ6_idx = this.occ6_idx + 1
       this.cow_idx = this.cow_idx + 1
@@ -3715,6 +3929,9 @@ export default {
         if (endyear > 95) endyear = 95
       } else if (cls === 'ind8') {
         if (startyear < 90) startyear = 90
+        if (endyear > 115) endyear = 115
+      } else if (cls === 'ind12') {
+        if (startyear < 105) startyear = 105
       } else if (cls === 'occ5') {
         if (endyear > 99) endyear = 99
       } else if (cls === 'occ6') {
@@ -4017,6 +4234,7 @@ export default {
       else if (type === 'ind6') data = this.ind6_data
       else if (type === 'ind7') data = this.ind7_data
       else if (type === 'ind8') data = this.ind8_data
+      else if (type === 'ind12') data = this.ind12_data
       else if (type === 'occ5') data = this.occ5_data
       else if (type === 'occ6') data = this.occ6_data
       else if (type === 'cow') data = this.cow_data
@@ -4036,6 +4254,7 @@ export default {
       else if (type === 'ind6') data = this.ind6_sort
       else if (type === 'ind7') data = this.ind7_sort
       else if (type === 'ind8') data = this.ind8_sort
+      else if (type === 'ind12') data = this.ind12_sort
       else if (type === 'occ5') data = this.occ5_sort
       else if (type === 'occ6') data = this.occ6_sort
       else if (type === 'cow') data = this.cow_sort
@@ -4080,6 +4299,13 @@ export default {
           this.ind8_drawset = false
           this.ind8_table = false
           this.hkey6 = this.hkey6 + 1
+        }
+      } else if (type === 'ind12') {
+        this.ind12ChartOption = obj
+        if (!redraw) {
+          this.ind12_drawset = false
+          this.ind12_table = false
+          this.hkey12 = this.hkey12 + 1
         }
       } else if (type === 'occ5') {
         this.occ5ChartOption = obj
@@ -4128,6 +4354,7 @@ export default {
         type === 'ind6' ||
         type === 'ind7' ||
         type === 'ind8' ||
+        type === 'ind12' ||
         type === 'occ5' ||
         type === 'occ6'
       )
@@ -4303,6 +4530,10 @@ export default {
       this.drawlayout('ind8', opt)
       this.ind8_obj = opt
     },
+    drawind12(opt) {
+      this.drawlayout('ind12', opt)
+      this.ind12_obj = opt
+    },
     drawocc5(opt) {
       this.drawlayout('occ5', opt)
       this.occ5_obj = opt
@@ -4330,6 +4561,7 @@ export default {
       if (this.ind6_obj) this.drawlayout('ind6', this.ind6_obj, true)
       if (this.ind7_obj) this.drawlayout('ind7', this.ind7_obj, true)
       if (this.ind8_obj) this.drawlayout('ind8', this.ind8_obj, true)
+      if (this.ind12_obj) this.drawlayout('ind12', this.ind12_obj, true)
       if (this.occ5_obj) this.drawlayout('occ5', this.occ5_obj, true)
       if (this.occ6_obj) this.drawlayout('occ6', this.occ6_obj, true)
       if (this.cow_obj) this.drawlayout('cow', this.cow_obj, true)
@@ -4380,6 +4612,10 @@ export default {
     downloadImage6(type) {
       this.setImageCount()
       this.$refs.chart6.chart.exportChart({ type })
+    },
+    downloadImage12(type) {
+      this.setImageCount()
+      this.$refs.chart12.chart.exportChart({ type })
     },
     downloadImage7(type) {
       this.setImageCount()
@@ -4512,6 +4748,10 @@ export default {
     downloadfile6(type) {
       this.setTableCount()
       this.downloadtable(type, 'table6', this.ind8_title)
+    },
+    downloadfile12(type) {
+      this.setTableCount()
+      this.downloadtable(type, 'table12', this.ind12_title)
     },
     downloadfile7(type) {
       this.setTableCount()
