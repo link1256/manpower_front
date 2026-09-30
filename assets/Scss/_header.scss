@@ -1,0 +1,339 @@
+.header {
+  background: #485965;
+  @include pc-width {
+    min-height: 80px;
+    height: 80px;
+  }
+  @include pcss-width {
+    min-height: 80px;
+    height: 80px;
+  }
+  @include pad-width {
+    min-height: 80px;
+    height: 80px;
+  }
+  @include small-pad-width {
+    min-height: 40px;
+    height: 40px;
+  }
+  @include phone-width {
+    min-height: 60px;
+    height: 60px;
+  }
+  width: 100%;
+  display: flex !important;
+  z-index: 10;
+  align-items: flex-end;
+  padding-left: 290px;
+  .headertitle {
+    font-size: 1.25em;
+    color: #FFFFFF;
+    margin: 0;
+    margin-left: 1em;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 47px;
+    position: absolute;
+    top: 15px;
+    @include small-pad-width {
+      font-size: 1em;
+      line-height: 20px;
+      top: 10px;
+      left: 40px;
+    }
+    @include phone-width {
+      font-size: 1em;
+      line-height: 20px;
+      top: 20px;
+      left: 40px;
+    }
+  }
+  .headertitle_sub {
+    font-size: 0.75em;
+    color: #FFFFFF;
+    margin-left: 200px;
+    font-style: normal;
+    font-weight: 400;
+    position: absolute;
+    top: 20px;
+    width: 300px;
+    @include small-pad-width {
+      display: none;
+    }
+    @include phone-width {
+      display: none;
+    }
+  }
+  .FunctionItem,
+  .FunctionItemNotHover {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    color: white;
+    height: 100%;
+    width: 110px;
+    @include detsktop-top-below(){
+      width: auto;
+    }
+  }
+  .FunctionItem {
+    cursor: pointer;
+  }
+  .FunctionItem span {
+    text-align: center;
+    width: 110px;
+    margin-bottom: auto;
+    margin-top: 15px;
+  }
+  .FunctionItem:hover {
+    border-bottom: 6px solid #85B2B5;
+  }
+  .topmenubtn {
+    @include pc-width {
+      display: none !important;
+    }
+    @include pcss-width {
+      margin-left: auto;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      color: #ffffff !important;
+      font-size: 2em;
+      height: 40px;
+    }
+    @include pad-width {
+      margin-left: auto;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      color: #ffffff !important;
+      font-size: 2em;
+      height: 40px;
+    }
+    @include small-pad-width {
+      margin-left: auto;
+      margin-right: 3px;
+      margin-bottom: 3px;
+      color: #ffffff !important;
+      font-size: 2em;
+      height: 40px;
+    }
+    @include phone-width {
+      margin-left: auto;
+      margin-right: 3px;
+      margin-bottom: 12px;
+      color: #ffffff !important;
+      font-size: 2em;
+      height: 40px;
+    }
+    cursor: pointer;
+  }
+  .topmenushow {
+    @include pcss-width {
+      display: none !important;
+    }
+    @include pad-width {
+      display: none !important;
+    }
+    @include small-pad-width {
+      display: none !important;
+    }
+    @include phone-width {
+      display: none !important;
+    }
+  }
+}
+.header_eng {
+  background: #485965;
+  @include pc-width {
+    min-height: 80px;
+    height: 80px;
+  }
+  @include pcss-width {
+    min-height: 80px;
+    height: 80px;
+  }
+  @include pad-width {
+    min-height: 80px;
+    height: 80px;
+  }
+  @include small-pad-width {
+    min-height: 40px;
+    height: 40px;
+  }
+  @include phone-width {
+    min-height: 60px;
+    height: 60px;
+  }
+  width: 100%;
+  display: flex !important;
+  z-index: 10;
+  align-items: flex-end;
+  padding-left: 240px;
+  .headertitle {
+    font-size: 1em;
+    color: #FFFFFF;
+    margin: 0;
+    margin-left: 10px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 47px;
+    position: absolute;
+    top: 15px;
+    @include small-pad-width {
+      font-size: 0.875em;
+      line-height: 20px;
+      top: 10px;
+      left: 40px;
+    }
+    @include phone-width {
+      font-size: 0.875em;
+      line-height: 20px;
+      top: 10px;
+      left: 40px;
+    }
+  }
+  .FunctionItem,
+  .FunctionItemNotHover {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    color: white;
+    height: 100%;
+    @include detsktop-top-below(){
+      width: auto;
+    }
+  }
+  .FunctionItem {
+    cursor: pointer;
+  }
+  .FunctionItem span {
+    text-align: center;
+    min-width: 200px;
+    margin-bottom: auto;
+    margin-top: 15px;
+    font-size: 0.8125em;
+  }
+  .FunctionItem:hover {
+    border-bottom: 6px solid #85B2B5;
+  }
+  .topmenushow {
+    @include pcss-width {
+      display: none !important;
+    }
+    @include pad-width {
+      display: none !important;
+    }
+    @include small-pad-width {
+      display: none !important;
+    }
+    @include phone-width {
+      display: none !important;
+    }
+  }
+  .topmenubtn {
+    @include pc-width {
+      display: none !important;
+    }
+    @include pcss-width {
+      margin-left: auto;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      color: #ffffff !important;
+      font-size: 2em;
+      height: 40px;
+    }
+    @include pad-width {
+      margin-left: auto;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      color: #ffffff !important;
+      font-size: 2em;
+      height: 40px;
+    }
+    @include small-pad-width {
+      margin-left: auto;
+      margin-right: 3px;
+      margin-bottom: 3px;
+      color: #ffffff !important;
+      font-size: 2em;
+      height: 40px;
+    }
+    @include phone-width {
+      margin-left: auto;
+      margin-right: 3px;
+      margin-bottom: 12px;
+      color: #ffffff !important;
+      font-size: 2em;
+      height: 40px;
+    }
+    cursor: pointer;
+  }
+}
+.header3 {
+  min-height: 80px;
+  height: 80px;
+  width: 250px;
+  display: flex !important;
+  align-items: center;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  .headerlogo {
+    height: 40px;
+    width: 240px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  @include small-pad-width {
+    display: none !important;
+  }
+  @include phone-width {
+    display: none !important;
+  }
+}
+.header4 {
+  min-height: 40px;
+  height: 40px;
+  display: flex !important;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  .headerlogo {
+    height: 40px;
+    width: 40px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  @include pc-width {
+    display: none !important;
+  }
+  @include pcss-width {
+    display: none !important;
+  }
+  @include pad-width {
+    display: none !important;
+  }
+  @include phone-width {
+    top: 10px;
+  }
+}
+.headerName {
+  display: block;
+  @include detsktop-top-below() {
+    display: none ;
+  }
+}
+.headerLogOut {
+  width:80px;
+  margin-left: auto;
+  color: white;
+  height: 100%;
+  @include AllCenter();
+  @include detsktop-top-below(){
+    display: none ;
+  }
+}
+.baseheader {
+  width: 100%;
+  background-color: #dae8f4;
+  height: 60px;
+}

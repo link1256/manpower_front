@@ -1,0 +1,285 @@
+.TableStyle table {
+    thead {
+      th {
+        border: 1px solid #505050;
+      }
+      tr {
+        border: 1px solid #505050;
+        background: #466a6d;
+      }
+      span {
+        font-size: 1em;
+        font-weight: bold;
+        color: #ffffff;
+        i {
+          color: #000000;
+        }
+      }
+      i {
+        color: #000000 !important;
+      }
+    }
+    tbody {
+      td {
+        border: 1px solid #505050;
+        font-size: 1em !important;
+      }
+      tr {
+        border: 1px solid #505050;
+      }
+      tr:nth-child(even) {
+        background: #D0E0EA;
+      }
+      tr:nth-child(odd) {
+        background: #FFFFFF;
+      }
+    }
+  }
+
+  .detailtable {
+    width: 100%;
+    font-size: 0.9375em;
+    tbody {
+      tr:nth-child(even) {
+        background: #E7EDEF;
+      }
+      tr:nth-child(odd) {
+        background: #FFFFFF;
+      }
+      td {
+        padding: 10px 5px;
+      }
+      td:nth-child(1) {
+        width: 125px;
+        text-align: center;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      td:nth-child(2) {
+        width: 100px;
+        text-align: center;
+      }
+      td:nth-child(3) {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
+    @include small-pad-width {
+      display: none !important;
+    }
+    @include phone-width {
+      display: none !important;
+    }
+  }
+
+  .detailtable2 {
+    width: 100%;
+    font-size: 0.9375em;
+    background: #FFFFFF;
+    tbody {
+      td {
+        padding: 10px 5px;
+      }
+      td:nth-child(1) {
+        width: 125px;
+        text-align: center;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      td:nth-child(2) {
+        width: 100px;
+        text-align: center;
+      }
+      td:nth-child(3) {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
+    .deftableblue {
+      background: #E7EDEF;
+    }
+    @include pc-width {
+      display: none !important;
+    }
+    @include pcss-width {
+      display: none !important;
+    }
+    @include pad-width {
+      display: none !important;
+    }
+  }
+
+  .NormalGreenTable{
+    width: 100%;
+    border-spacing: 0px;
+    thead{
+      background: #00816a;
+      th{
+        padding: 10px;
+      }
+      span {
+        font-size: 1em;
+        font-weight: bold;
+        color: white;
+        i {
+          color: white;
+        }
+      }
+    }
+    tbody{
+      tr:hover{
+        background: #eeeeee;
+      }
+      td{
+        padding:5px 0px;
+        span{
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  .tbodyPadding{
+    tr{
+      td{
+        padding:5px;
+      }
+  
+    }
+  }
+  .NoDataText{
+    text-align: center;
+    span{
+      font-weight: bold;
+      color:red;
+    }
+  }  
+  .transcol {
+    @include small-pad-width {
+      min-width: 100% !important;
+    }
+    @include phone-width {
+      min-width: 100% !important;
+    }
+  }
+  .transpre {
+    @include small-pad-width {
+      display: none !important;
+    }
+    @include phone-width {
+      display: none !important;
+    }
+  }
+  .rwdbtnzone {
+    @include AllCenter();
+    @include pc-width {
+      display: none !important;
+    }
+    @include pcss-width {
+      display: none !important;
+    }
+    @include pad-width {
+      display: none !important;
+    }
+  }
+  .rcbtnzone {
+    @include small-pad-width {
+      display: none !important;
+    }
+    @include phone-width {
+      display: none !important;
+    }
+  }
+  table.tableData {
+    min-width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #B0B0B0;
+    white-space: pre;
+    table-layout: fixed;
+  }
+  table.tableData td {
+    font-size: 1em;
+    border: 1px solid #B0B0B0 !important;
+    text-align: center;
+  }
+  table.tableData thead tr {
+    background: #485b68 !important;
+    color: #ffffff !important;
+  }
+  table.tableData tbody {
+    background: #ffffff !important;
+  }
+  table.tableTitle {
+    font-size: 0.9375em;
+    color: #485b68 !important;
+  }
+  table.tableTitle .titleText {
+    width: 100%;
+    font-size: 1.5625em;
+    font-weight: bolder;
+    color: #485b68 !important;
+  }
+  table.tableTitle .titleRange {
+    font-size: 1.25em;
+    font-weight: bolder;
+    color: #485b68 !important;
+  }
+  table.tableData thead tr td {
+    min-width: 120px;
+  }
+  table.tableData tbody tr.newCssThead {
+    background: #485b68 !important;
+    color: #ffffff !important;
+  }
+  .tableOuterDiv {
+    width: 100%;
+    height: 500px;
+    overflow: auto;
+  }
+
+  table.tableData tbody td {
+    background-color: white;
+    text-align: right;
+  }
+
+  .colYear {
+    position: -webkit-sticky;
+    position: sticky;
+    background-color: white;
+    border: 1px solid #B0B0B0 !important;
+    left: 0px;
+    min-width: 60px !important;
+    width: 60px !important;
+    text-align: center !important;
+  }
+  .colMonth {
+    position: -webkit-sticky;
+    position: sticky;
+    background-color: white;
+    border: 1px solid #B0B0B0 !important;
+    left: 60px;
+    min-width: 60px !important;
+    width: 60px !important;
+    text-align: center !important;
+  }
+  .colClass {
+    position: -webkit-sticky;
+    position: sticky;
+    background-color: white;
+    border: 1px solid #B0B0B0 !important;
+    left: 120px;
+    // text-align: center !important;
+  }
+  .headerMain {
+    position: -webkit-sticky;
+    position: sticky;
+    background-color: #485b68;
+    left: 0px;
+  }
+  .headerMain2 {
+    position: -webkit-sticky;
+    position: sticky;
+    background-color: #485b68;
+    left: 120px;
+    min-width: 360px !important;
+    width: 360px !important;
+  }

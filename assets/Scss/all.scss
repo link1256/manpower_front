@@ -1,0 +1,391 @@
+@import '_rwd.scss';
+@import '_mixins.scss';
+@import '_header.scss';
+@import '_leftmenu.scss';
+@import '_table.scss';
+@import '_button.scss';
+@import '_btnIcon.scss';
+@import '_model.scss';
+@import '_inputstyle.scss';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-vue/dist/bootstrap-vue.css';
+@import 'summernote/dist/summernote.min.css';
+@import '_pivottable.scss';
+@import '@mdi/font/css/materialdesignicons.css';
+@import 'material-design-icons-iconfont/dist/material-design-icons.css';
+
+html {
+    font-size: 0.875em;
+    overflow-y: hidden !important;
+    font-family: 'Microsoft JhengHei', sans-serif !important;
+}
+body {
+    font-size: 0.875em;
+    overflow-y: hidden;
+    background-image: url('../images/Background.svg');
+    background-size: cover;
+    font-family: 'Microsoft JhengHei', sans-serif !important;
+}
+body::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
+main {
+    min-height: 100%;
+}
+.container {
+    position: relative;
+}
+footer {
+    background: #337C94;
+    color: #ffffff;
+    margin-top: auto;
+    display: flex !important;
+    justify-items: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.875em;
+    min-height: 100px;
+    position: relative;
+    @include pad-width {
+        flex-wrap: wrap;
+    }
+    @include small-pad-width {
+        flex-wrap: wrap;
+    }
+    @include phone-width {
+        flex-wrap: wrap;
+    }
+}
+.footerblock0 {
+    @include pc-width {
+        width: 50%;
+        text-align: left;
+    }
+    @include pcss-width {
+        width: 50%;
+        text-align: left;
+    }
+    @include pad-width {
+        width: 100%;
+        text-align: left;
+    }
+    @include small-pad-width {
+        width: 100%;
+        text-align: left;
+    }
+    @include phone-width {
+        width: 100%;
+        text-align: left;
+    }
+    position: relative;
+}
+.footerblock {
+    @include pc-width {
+        width: 30%;
+        text-align: left;
+    }
+    @include pcss-width {
+        width: 30%;
+        text-align: left;
+    }
+    @include pad-width {
+        width: 100%;
+        text-align: left;
+    }
+    @include small-pad-width {
+        width: 100%;
+        text-align: left;
+    }
+    @include phone-width {
+        width: 100%;
+        text-align: left;
+    }
+}
+.footerblock_eng {
+    @include pc-width {
+        width: 40%;
+        text-align: left;
+        height: 100px;
+        padding-top: 15px;
+        margin-left: 20px;
+    }
+    @include pcss-width {
+        width: 40%;
+        text-align: left;
+        height: 100px;
+        padding-top: 15px;
+        margin-left: 20px;
+    }
+    @include pad-width {
+        width: 100%;
+        text-align: left;
+        height: 100px;
+        padding-top: 15px;
+        margin-left: 20px;
+    }
+    @include small-pad-width {
+        width: 100%;
+        text-align: left;
+        height: 100px;
+        padding-top: 15px;
+        margin-left: 20px;
+    }
+    @include phone-width {
+        width: 100%;
+        text-align: left;
+        height: 80px;
+        margin-top: 10px;
+        margin-left: 5px;
+    }
+}
+.v-dialog:not(.v-dialog--fullscreen) {
+    max-height: 100% !important;
+}
+.AllCenter{
+    @include AllCenter()
+}
+.AllRight {
+    justify-content: flex-end;
+    align-items: center;
+    display: flex;
+}
+.AllTopRight {
+    justify-content: flex-end;
+    align-items: flex-start;
+    display: flex;
+}
+.AllLeft {
+    @include AllLeft();
+    position: relative;
+}
+.AllTopCenter {
+    justify-content: center !important;
+    align-items: flex-start !important;
+    display: flex !important;
+}
+.rowPadding{
+    padding: 0px 12px;
+    align-items: center;
+}
+.pageitem {
+    width: 100%;
+    display: flex;
+}
+.pageitem_2 {
+    width: 100%;
+    max-width: 1140px;
+    display: flex;
+}
+.PageDefault{
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    min-height: 100%;
+    height: 100%;
+    padding: 0px;
+    position: relative;
+}
+.v-application--wrap{
+    height: 100vh;
+}
+.fadewindow {
+    max-height: 750px;
+    overflow: auto;
+}
+label, p {
+    margin-bottom: 0px !important;
+}
+.highcharts-exporting-group {
+    display: none !important;
+}
+.chartinfo {
+    font-size: 1em;
+    color: #292B3B;
+}
+button {
+    font-family: 'Microsoft JhengHei', sans-serif !important;
+}
+.FunctionItem, .menuitem {
+    font-size: 1em !important;
+}
+.tableitemfade {
+    z-index: 999 !important;
+}
+.v-treeview-node__label {
+    font-size: 1em !important;
+    color: rgba(0, 0, 0, 1) !important;
+}
+.v-input__slot .v-label{
+    color: black!important
+}
+.v-input--is-disabled .v-label {
+    color: gray!important
+}
+.showbtn {
+    color: #344059;
+    background: #ffffff;
+    border: 1px solid #aeaeae;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.125em;
+    padding: 5px 15px;
+    margin-right: 10px;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    min-width: 125px !important;
+  }
+.showbtnzone {
+    height: 100px !important;
+    flex-wrap: wrap !important;
+}
+.dialogclose {
+    position: absolute;
+    top: 5px;
+    right: 25px;
+    font-size: 1.5em;
+    cursor: pointer;
+    z-index: 2;
+}
+.b-tooltip {
+    font-size: 0.9375em !important;
+}
+.breadzone {
+    overflow: auto;
+}
+.containerForTable {
+    margin-left: 2.5% !important;
+    padding: 0px !important;
+    width: 95% !important;
+    max-width: 95% !important;
+}
+.contanierNonMaxWidth {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+.c2 {
+    font-size: 1.5625em;
+    font-weight: bolder;
+    color: #485b68 !important;
+    margin: 5px 0px;
+}
+.translist {
+    min-height: 150px;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .fcol {
+        min-width: 70px;
+    }
+    .scol {
+        min-width: 10px;
+    }
+}
+.fade_cust {
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.4);
+    position: absolute;
+}
+.loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    z-index: 101;
+    top: calc(50% - 60px);
+    left: calc(50% - 60px);
+    position: absolute;
+}
+.row {
+    margin: 0px;
+}
+.v-label {
+    font-size: 1em;
+}
+.v-icon.v-icon {
+    font-size: 1.5em;
+}
+.v-icon.v-icon--dense {
+    font-size: 1.25em;
+}
+.v-input {
+    font-size: 1em;
+}
+.v-messages {
+    font-size: 0.75em;
+}
+.topfocus {
+    position: absolute;
+    left: 5px;
+    top: 0px;
+    color: #fff !important;
+}
+a.sr-only {
+     padding: 0.5rem;
+    background: #2B358C;
+    color: #FFF;
+    position: absolute;
+    top: -2.5rem;
+    left: 0;
+    -webkit-transition: top 1s ease-out;
+    transition: top 1s ease-out;
+    z-index: 100;
+}
+a.sr-only:focus {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    outline-color: transparent;
+    -webkit-transition: top .1s ease-in;
+    transition: top .1s ease-in;
+    border: #FFBF47 solid 0.4rem;
+    background: #FFBF47;
+    color: #000000;
+    font-weight: 700;
+}
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+fieldset {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.dataselect.v-input.v-input--is-focused .v-input__control {
+  border-color: #1976d2 !important;   /* 改邊框顏色 */
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 1); /* 加上外框陰影 */
+  border-radius: 4px;
+}
+.v-input.drawsetselect.v-input--is-focused {
+  border-color: #1976d2 !important;   /* 改邊框顏色 */
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 1); /* 加上外框陰影 */
+  border-radius: 4px;
+}

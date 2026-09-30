@@ -1,0 +1,117 @@
+table.pvtTable {
+  min-width: 100%;
+  min-height: 100%;
+  border-collapse: collapse;
+}
+table.pvtTable thead tr th,
+table.pvtTable tbody tr th {
+  min-width: 180px !important;
+  height: 45px;
+  background-color: #ffffff;
+  border: 1px solid #505050;
+  font-size: 1em !important;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+table.pvtTable thead tr th {
+  text-align: center;
+}
+table.pvtTable tbody tr td {
+  text-align: right;
+  vertical-align: middle;
+  border: 1px solid #505050;
+  font-size: 0.875em !important;
+  padding-right: 5px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+table.pvtTable tbody tr:nth-child(even) td {
+  background-color: #ffffff;
+}
+table.pvtTable tbody tr:nth-child(odd) td {
+  background-color: #d0e0ea;
+}
+table.pvtTable tbody tr:nth-child(odd) th:last-of-type {
+  background-color: #d0e0ea;
+}
+table.pvtTable thead tr:nth-child(1) th:nth-child(n + 2) {
+  background: #466a6d;
+}
+.slevel3 {
+  background: #fcd76e !important;
+  color: #000000 !important;
+}
+.slevel2 {
+  background: #485b68 !important;
+  color: #ffffff !important;
+}
+.slevel1 {
+  background: #466a6d !important;
+  color: #ffffff !important;
+}
+.slevelundefined {
+  background: #466a6d !important;
+  color: #ffffff !important;
+}
+table.pvtTable thead tr th, table.pvtTable tbody tr th {
+  white-space: nowrap !important;
+}
+table.pvtTable tbody .pvtRowLabel {
+  min-width: 180px !important;
+}
+
+table.pvtTable thead tr:first-child th:first-child {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0px;
+}
+
+table.pvtTable tbody tr .pvtRowLabel:first-child {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0px;
+}
+
+table.pvtTable tbody tr .pvtRowLabel:nth-child(2) {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 180px;
+}
+
+table.pvtTable tbody tr .pvtRowLabel:nth-child(3) {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 360px;
+}
+
+table.pvtTable tbody tr .pvtRowLabel:nth-child(4) {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 540px;
+}
+
+table.pvtTable tbody .th_2 {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 180px !important;
+}
+
+table.pvtTable tbody tr .th_3 {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 360px !important;
+}
+
+table.pvtTable tbody tr .th_4 {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 540px !important;
+}
+
+table.pvtTable tbody tr .th_5 {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 720px !important;
+}

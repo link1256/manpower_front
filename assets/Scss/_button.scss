@@ -1,0 +1,114 @@
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 0.875em;
+    font-weight: normal;
+    line-height: 1.428571429;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: pointer;
+  }
+  .btn:hover, .btn:focus {
+    color: #333333;
+    text-decoration: none;
+  }
+  .btn img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .smallmodalBtn {
+    width: 100px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-size: 0.75em;
+    border-radius: 5px;
+  }
+
+  .minimedianmodalBtn {
+    width: 150px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-size: 1.125em;
+    border-radius: 5px;
+  }
+
+  .medianmodalBtn {
+    width: 200px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-size: 1.125em;
+    border-radius: 5px;
+  }
+
+  .blueboderBtn {
+    background-color: #292B3B !important;
+    color: #ffffff !important;
+    font-weight: 900;
+  }
+
+  .graybtn {
+    background: #EFEFEF !important;
+    color: #000000 !important;
+    font-weight: 900;
+  }
+
+  .commonbtn {
+    word-break: normal;
+    height: auto;
+    width: 200px;
+    white-space: normal;
+    background: #35575a !important;
+    color: #ffffff !important;
+  }
+
+  .commonbtn:hover {
+    background: #003033 !important;
+  }
+
+  .bcommonbtn {
+    word-break: normal;
+    height: auto;
+    width: 200px;
+    white-space: normal;
+    background: #4E616E !important;
+    color: #ffffff !important;
+  }
+
+  .bcommonbtn:hover {
+    background: #4E616E !important;
+  }
+
+  .crossBtn {
+    height: 45px;
+    background-color: #b80015 !important;
+    color: #ffffff !important;
+  }
+
+  .searchbtn {
+    width: 405px;
+    height: 45px;
+    background-color: #344059 !important;
+    color: #ffffff !important;
+  }
+
+  .editbtn {
+    width: 135px;
+    height: 45px;
+    background-color: #344059 !important;
+    color: #ffffff !important;
+  }
+
+  .cancelbtn {
+    background: #888888 !important;
+    color: #ffffff !important;
+  }
