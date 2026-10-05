@@ -1005,7 +1005,8 @@ export default {
       pepinditems: [
         { text: '舊行業(6th)(67~90年)', value: 1 },
         { text: '舊行業(7th)(88~95年)', value: 2 },
-        { text: '新行業(8th-11th)(96年以後)', value: 4 }
+        { text: '舊行業(8th-11th)(96年以後)', value: 4 },
+        { text: '新行業(12th)(105年以後)', value: 5 }
       ],
       pepocc: 1,
       pepoccitems: [
@@ -1016,8 +1017,9 @@ export default {
       pepitems2: [
         { text: '就業者(二)舊行業(6th)舊職業(5th)(67~90年)', value: 1 },
         { text: '就業者(二)舊行業(7th)舊職業(5th)(88~95年)', value: 2 },
-        { text: '就業者(二)新行業(8th)舊職業(5th)(96~99年)', value: 3 },
-        { text: '就業者(二)新行業(8th-11th)新職業(6th)(100年以後)', value: 4 }
+        { text: '就業者(二)舊行業(8th)舊職業(5th)(96~99年)', value: 3 },
+        { text: '就業者(二)舊行業(8th-11th)新職業(6th)(100年以後)', value: 4 },
+        { text: '就業者(二)新行業(12th)新職業(6th)(105年以後)', value: 5 }
       ],
       pup: 5,
       pupitems2: [
@@ -1470,7 +1472,7 @@ export default {
       })
     },
     pep2Change() {
-      const s = this.pep2
+      const s = Number(this.pep2)
       let cow = 0
       let ind = 0
       let occ = 0
@@ -1489,11 +1491,16 @@ export default {
       } else if (s === 4) {
         ind = this.bdata.ind8
         occ = this.bdata.occ6
+      } else if (s === 5) {
+        ind = this.bdata.ind12
+        occ = this.bdata.occ6
       }
 
       this.occitems = []
       this.cowitems = []
       this.inditems = []
+      this.selectind = []
+      this.selectocc = []
 
       for (let i = 0; i < cow.length; i++) {
         // if (cow[i].name === '總計') continue
@@ -1604,6 +1611,9 @@ export default {
         } else if (pep2 === 4) {
           date.minyear = 2011
           date.maxyear = this.bdata.MNYear.maxyear
+        } else if (pep2 === 5) {
+          date.minyear = 2016
+          date.maxyear = this.bdata.MNYear.maxyear
         }
         ismin = true
       } else if (s === 9 && pup !== 5) {
@@ -1655,6 +1665,9 @@ export default {
           date.maxyear = 2010
         } else if (d === 4) {
           date.minyear = 2007
+          date.maxyear = this.bdata.MNYear.maxyear
+        } else if (d === 5) {
+          date.minyear = 2016
           date.maxyear = this.bdata.MNYear.maxyear
         }
         ismin = true

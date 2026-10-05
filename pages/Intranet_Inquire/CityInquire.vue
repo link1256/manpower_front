@@ -1075,7 +1075,8 @@ export default {
       pepinditems: [
         { text: '舊行業(6th)(67~90年)', value: 1 },
         { text: '舊行業(7th)(88~95年)', value: 2 },
-        { text: '新行業(8th-11th)(96年以後)', value: 4 }
+        { text: '舊行業(12th)(96年以後)', value: 4 },
+        { text: '新行業(12th)(105年以後)', value: 5 }
       ],
       pepocc: 1,
       pepoccitems: [
@@ -1521,6 +1522,9 @@ export default {
           date.minyear = 2007
           if (this.newshow === true) date.maxyear = this.bdata.MNYear1.maxyear
           else date.maxyear = this.bdata.MNYear2.maxyear
+        } else if (d === 5) {
+          date.minyear = 2016
+          date.maxyear = this.bdata.MNYear1.maxyear
         }
         ismin = true
       } else if (s.includes(5)) {

@@ -1050,7 +1050,8 @@ export default {
       } else if (classes === 4) {
         if (type === 1) return '舊行業(6th)(67~90年)'
         else if (type === 2) return '舊行業(7th)(88~95年)'
-        else if (type === 4) return '新行業(8th-11th)(96年以後)'
+        else if (type === 4) return '舊行業(12th)(96年以後)'
+        else if (type === 5) return '新行業(12th)(105年以後)'
       } else if (classes === 5) {
         if (type === 1) return '舊職業(5th)(67~99年)'
         else if (type === 4) return '新職業(6th)(100年以後)'

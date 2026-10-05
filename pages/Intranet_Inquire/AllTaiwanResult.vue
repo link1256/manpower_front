@@ -805,16 +805,19 @@ export default {
         else if (subtype === 3)
           ts += '-' + '就業者(一)新行業(8th)舊職業(5th)(90~99年)'
         else if (subtype === 4)
-          ts += '-' + '就業者(一)新行業(8th-11th)(96年以後)'
+          ts += '-' + '就業者(一)舊行業(8th-11th)(96年以後)'
+        else if (subtype === 5) ts += '-' + '就業者(一)新行業(12th)(105年以後)'
       } else if (classes === 8) {
         if (subtype === 1)
           ts += '-' + '就業者(二)舊行業(6th)舊職業(5th)(67~90年)'
         else if (subtype === 2)
           ts += '-' + '就業者(二)舊行業(7th)舊職業(5th)(88~95年)'
         else if (subtype === 3)
-          ts += '-' + '就業者(二)新行業(8th)舊職業(5th)(96~99年)'
+          ts += '-' + '就業者(二)舊行業(8th)舊職業(5th)(96~99年)'
         else if (subtype === 4)
-          ts += '-' + '就業者(二)新行業(8th-11th)新職業(6th)(100年以後)'
+          ts += '-' + '就業者(二)舊行業(8th-11th)新職業(6th)(100年以後)'
+        else if (subtype === 5)
+          ts += '-' + '就業者(二)新行業(12th)新職業(6th)(105年以後)'
 
         ts += '-' + this.getrocclasses2(classes2)
         ts += this.getsubtype2()
@@ -904,16 +907,19 @@ export default {
         else if (subtype === 3)
           ts += '-' + '就業者(一)新行業(8th)舊職業(5th)(90~99年)'
         else if (subtype === 4)
-          ts += '-' + '就業者(一)新行業(8th-11th)(96年以後)'
+          ts += '-' + '就業者(一)舊行業(8th-11th)(96年以後)'
+        else if (subtype === 5) ts += '-' + '就業者(一)新行業(12th)(105年以後)'
       } else if (classes === 8) {
         if (subtype === 1)
           ts += '-' + '就業者(二)舊行業(6th)舊職業(5th)(67~90年)'
         else if (subtype === 2)
           ts += '-' + '就業者(二)舊行業(7th)舊職業(5th)(88~95年)'
         else if (subtype === 3)
-          ts += '-' + '就業者(二)新行業(8th)舊職業(5th)(96~99年)'
+          ts += '-' + '就業者(二)舊行業(8th)舊職業(5th)(96~99年)'
         else if (subtype === 4)
-          ts += '-' + '就業者(二)新行業(8th-11th)新職業(6th)(100年以後)'
+          ts += '-' + '就業者(二)舊行業(8th-11th)新職業(6th)(100年以後)'
+        else if (subtype === 5)
+          ts += '-' + '就業者(二)新行業(12th)新職業(6th)(105年以後)'
 
         ts += '-' + this.getrocclasses2(classes2)
         // ts += this.getsubtype2()
