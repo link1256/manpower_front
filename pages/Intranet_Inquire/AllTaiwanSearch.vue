@@ -1026,8 +1026,9 @@ export default {
         { text: '失業者(一)', value: 5 },
         { text: '失業者(二)舊行業(6th)舊職業(5th)(67~90年)', value: 1 },
         { text: '失業者(二)舊行業(7th)舊職業(5th)(88~95年)', value: 2 },
-        { text: '失業者(二)新行業(8th)舊職業(5th)(96~99年)', value: 3 },
-        { text: '失業者(二)新行業(8th-11th)新職業(6th)(100年以後)', value: 4 }
+        { text: '失業者(二)舊行業(8th)舊職業(5th)(96~99年)', value: 3 },
+        { text: '失業者(二)舊行業(8th-11th)新職業(6th)(100年以後)', value: 4 },
+        { text: '失業者(二)新行業(12th)新職業(6th)(105年以後)', value: 6 }
       ],
       nlf: 1,
       nlfitems: [
@@ -1629,6 +1630,9 @@ export default {
           date.maxyear = 2010
         } else if (pup === 4) {
           date.minyear = 2011
+          date.maxyear = this.bdata.MNYear.maxyear
+        } else if (pup === 6) {
+          date.minyear = 2016
           date.maxyear = this.bdata.MNYear.maxyear
         }
         ismin = true
