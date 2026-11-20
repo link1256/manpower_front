@@ -1,10 +1,15 @@
 <template>
   <v-app dark style="background: #D1E7EE;">
     <Header
+      :menu-open="leftmenu"
       @showdef="DefinitionOpen = true"
       @showleftmenu="showleftmenu"
     ></Header>
-    <rightMenu :show="leftmenu" @showdef="DefinitionOpen = true"></rightMenu>
+    <rightMenu
+      :show="leftmenu"
+      @close="showleftmenu(false)"
+      @showdef="DefinitionOpen = true"
+    ></rightMenu>
     <div id="outerPage" style="min-height: calc(100% - 80px); overflow: auto;">
       <main>
         <div style="width: 100%;">

@@ -11,6 +11,13 @@
       >:::</span
     >
     <div class="buttonzone">
+      <nuxt-link to="/DynamicCharts" class="port_btn" aria-label="動態統計圖">
+        <div class="AllCenter indruct2">互動式統計圖表</div>
+        <div class="btn_img AllCenter">
+          <img alt="" src="@/assets/images/PlayData/動態統計圖.png" />
+        </div>
+        <span class="btn_span AllCenter">動態統計圖</span>
+      </nuxt-link>
       <div
         class="port_btn"
         tabindex="0"
@@ -381,29 +388,24 @@ export default {
 @import '@/assets/Scss/_rwd.scss';
 @import '@/assets/Scss/_mixins.scss';
 .buttonzone {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(20px, 3vw, 44px);
   width: 100%;
-  @include pc-width {
-    height: 250px;
-    @include AllCenter();
-  }
-  @include pcss-width {
-    height: 250px;
-    @include AllCenter();
-  }
-  @include pad-width {
-    height: 700px;
-    @include FlexCoulmnCenter();
-  }
+  max-width: 1200px;
+  margin: 24px auto 40px;
+  padding: 0 24px;
+
   @include small-pad-width {
-    height: 700px;
-    @include FlexCoulmnCenter();
+    grid-template-columns: minmax(0, 350px);
+    justify-content: center;
   }
+
   @include phone-width {
-    height: 700px;
-    @include FlexCoulmnCenter();
+    grid-template-columns: minmax(0, 350px);
+    justify-content: center;
   }
-  margin-top: 20px;
-  margin-bottom: 20px;
 }
 .buttonzone2 {
   @include pc-width {
@@ -584,50 +586,37 @@ export default {
   }
 }
 .port_btn {
-  @include pc-width {
-    width: 350px;
-    height: 225px;
-    margin-left: 50px;
-  }
-  @include pcss-width {
-    width: 350px;
-    height: 225px;
-    margin-left: 50px;
-  }
-  @include pad-width {
-    width: 350px;
-    height: 225px;
-    margin-bottom: 40px;
-  }
-  @include small-pad-width {
-    width: 300px;
-    margin-bottom: 40px;
-  }
-  @include phone-width {
-    width: 300px;
-    margin-bottom: 40px;
-  }
-  float: left;
+  display: grid;
+  grid-template-rows: minmax(2.8em, auto) clamp(160px, 19vw, 225px) auto;
+  align-items: stretch;
+  min-width: 0;
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+
   .btn_img {
     background: #d5ecee;
     border-radius: 10px;
-    height: 100%;
+
+    img {
+      display: block;
+      max-width: 90%;
+      max-height: 85%;
+      object-fit: contain;
+    }
   }
+
   .btn_span {
-    width: 200px;
-    left: calc(50% - 100px);
-    bottom: -45px;
-    font-weight: bold;
-    font-size: 1.125em;
-    color: #ffffff;
-    background: #35575a;
+    justify-self: center;
+    width: min(200px, 90%);
+    padding: 10px 8px;
+    margin-top: 8px;
     border-radius: 10px;
-    position: absolute;
-    padding: 10px 0px;
-    cursor: pointer;
+    background: #35575a;
+    color: #fff;
+    font-size: 1.125em;
+    font-weight: bold;
   }
-  position: relative;
 }
 .buttonzone_rwd {
   @include pc-width {

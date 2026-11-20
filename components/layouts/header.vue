@@ -1,6 +1,6 @@
 <template>
   <header>
-    <div class="header">
+    <div ref="header" class="header" :class="{ compact: compactNavigation }">
       <a
         id="gotocenter"
         href="javascript:void(0);"
@@ -50,7 +50,7 @@
       >
         就業失業統計觀測站
       </h1>
-      <label class="headertitle_sub" @click="homeclick"
+      <label ref="englishTitle" class="headertitle_sub" @click="homeclick"
         >Employment and Unemployment Statistics Exploration & Information
         System</label
       >
@@ -74,60 +74,72 @@
       >
         <span style="cursor: pointer;">English</span>
       </div>
-      <div
-        v-if="showtop"
-        class="topmenushow"
-        style="margin-left: auto; height: 55px; display: flex;"
+      <nav
+        ref="desktopMenu"
+        class="desktop-navigation"
+        aria-label="主要選單"
+        :inert="compactNavigation ? '' : null"
       >
-        <v-menu v-for="(item, index) in TopFunctionMenu" :key="index" offset-y>
-          <template v-slot:activator="{ on }">
-            <div
-              :style="
-                item.FunctionId === $store.state.Utils.Menu.Menu.TopFunctionId
-                  ? 'border-bottom: 6px solid #85B2B5'
-                  : ''
-              "
-              :role="item.FunctionId === 7 ? 'button' : ''"
-              :aria-label="
-                item.FunctionId === 7 ? item.FunctionName + '會開啟新視窗' : ''
-              "
-              class="FunctionItem"
-              tabindex="0"
-              @click="TopFunctionClick(item.FunctionId)"
-              @keyup.enter="TopFunctionClick(item.FunctionId)"
-              v-on="on"
-            >
-              <span>{{ item.FunctionName }}</span>
-            </div>
-          </template>
-          <v-list v-if="item.SubList.length > 0">
-            <v-list-item
-              v-for="(subitem, j) in item.SubList"
-              :key="j"
-              tabindex="0"
-              @click="itemclick(index, j)"
-              @keyup.enter="itemclick(index, j)"
-            >
-              <v-list-item-title>{{ subitem.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-      <span
-        class="topmenubtn"
-        tabindex="0"
-        role="button"
+        <div
+          v-for="(item, index) in functionMenu"
+          :key="item.FunctionId"
+          class="primary-menu-item"
+        >
+          <nuxt-link
+            v-if="item.FunctionId === 9"
+            to="/DynamicCharts"
+            exact-path
+            class="FunctionItem dynamic-chart-tab"
+            ><span>{{ item.FunctionName }}</span></nuxt-link
+          >
+          <v-menu v-else offset-y>
+            <template v-slot:activator="{ on }">
+              <div
+                :style="
+                  !isDynamicCharts &&
+                  item.FunctionId === $store.state.Utils.Menu.Menu.TopFunctionId
+                    ? 'border-bottom: 6px solid #85B2B5'
+                    : ''
+                "
+                :role="item.FunctionId === 7 ? 'button' : ''"
+                :aria-label="
+                  item.FunctionId === 7
+                    ? item.FunctionName + '會開啟新視窗'
+                    : ''
+                "
+                class="FunctionItem"
+                tabindex="0"
+                @click="TopFunctionClick(item.FunctionId)"
+                @keyup.enter="TopFunctionClick(item.FunctionId)"
+                v-on="on"
+              >
+                <span>{{ item.FunctionName }}</span>
+              </div>
+            </template>
+            <v-list v-if="item.SubList.length > 0">
+              <v-list-item
+                v-for="(subitem, j) in item.SubList"
+                :key="j"
+                tabindex="0"
+                @click="itemclick(index, j)"
+                @keyup.enter="itemclick(index, j)"
+              >
+                <v-list-item-title>{{ subitem.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+      </nav>
+      <button
+        ref="menuToggle"
+        class="topmenubtn compact-toggle"
+        type="button"
         aria-label="選單按鈕"
-        :aria-expanded="leftmenu"
-        @click.stop="poback"
-        @keyup.enter="poback"
+        :aria-expanded="String(menuOpen)"
+        @click="poback"
       >
         ☰
-      </span>
-      <!--<v-app-bar-nav-icon
-        class="topmenubtn"
-        @click.stop="poback"
-      ></v-app-bar-nav-icon>-->
+      </button>
     </div>
   </header>
 </template>
@@ -136,10 +148,29 @@ import Highcharts from 'highcharts'
 import qs from 'qs'
 import axios from '../../plugins/axios'
 import { _SAlert } from '../../utils/sweetAlert2'
+
+const intranetMenu = {
+  FunctionId: 5,
+  FunctionName: '內網查詢',
+  SubList: [
+    { title: '臺灣地區', subvalue: 3 },
+    { title: '縣市資料', subvalue: 4 },
+    { title: '縣市重要指標', subvalue: 5 },
+    { title: '年報資料查詢', subvalue: 6 }
+  ]
+}
 export default {
+  props: {
+    menuOpen: { type: Boolean, default: false }
+  },
   data() {
     return {
       TopFunctionMenu: [
+        {
+          FunctionId: 9,
+          FunctionName: '動態統計圖',
+          SubList: []
+        },
         {
           FunctionId: 8,
           FunctionName: '就失業統計互動',
@@ -171,8 +202,38 @@ export default {
           SubList: []
         }
       ],
-      showtop: true,
-      leftmenu: false
+      compactNavigation: false,
+      intranetEnabled: false
+    }
+  },
+  computed: {
+    isHome() {
+      return this.$route.path === '/'
+    },
+    isDynamicCharts() {
+      return this.$route.name === 'DynamicCharts'
+    },
+    functionMenu() {
+      if (this.isHome) {
+        return this.TopFunctionMenu.filter(
+          (item) => item.FunctionId === 4 || item.FunctionId === 7
+        )
+      }
+      return this.intranetEnabled
+        ? [...this.TopFunctionMenu, intranetMenu]
+        : this.TopFunctionMenu
+    }
+  },
+  watch: {
+    isHome(atHome) {
+      if (!atHome) this.loadIntranetMenu()
+    },
+    '$route.fullPath'() {
+      this.$emit('showleftmenu', false)
+      this.$nextTick(() => {
+        this.checkNavigationFit()
+        if (this.isDynamicCharts) this.$nextTick(this.focusDynamicCharts)
+      })
     }
   },
   mounted() {
@@ -181,94 +242,53 @@ export default {
       document.documentElement.lang = 'zh-TW'
     }, 100)
     vm.checkbrowser()
-    window.addEventListener('keyup', this.handleEscape)
-    const loc = this.$route.path
-    if (loc === '/') {
-      vm.TopFunctionMenu = [
-        {
-          FunctionId: 4,
-          FunctionName: '名詞定義',
-          SubList: []
-        },
-        {
-          FunctionId: 7,
-          FunctionName: '答客問',
-          SubList: []
-        }
-      ]
-    } else {
-      axios
-        .post(vm.RequetURL.backurl, qs.stringify({ op: 'FrontIsLogin' }))
-        .then(function(Response) {
-          if (typeof Response === 'object' && Response.status === 200) {
-            const data = Response.data
-            if (data === 'Login') {
-              vm.RequetURL.isLogin = true
-              vm.TopFunctionMenu = [
-                {
-                  FunctionId: 8,
-                  FunctionName: '就失業統計互動',
-                  SubList: []
-                },
-                {
-                  FunctionId: 1,
-                  FunctionName: '常用資料查詢',
-                  SubList: []
-                },
-                {
-                  FunctionId: 2,
-                  FunctionName: '更多資料查詢',
-                  SubList: []
-                },
-                {
-                  FunctionId: 6,
-                  FunctionName: '縣市資料查詢',
-                  SubList: []
-                },
-                {
-                  FunctionId: 4,
-                  FunctionName: '名詞定義',
-                  SubList: []
-                },
-                {
-                  FunctionId: 7,
-                  FunctionName: '答客問',
-                  SubList: []
-                },
-                {
-                  FunctionId: 5,
-                  FunctionName: '內網查詢',
-                  SubList: [
-                    {
-                      title: '臺灣地區',
-                      subvalue: 3
-                    },
-                    {
-                      title: '縣市資料',
-                      subvalue: 4
-                    },
-                    {
-                      title: '縣市重要指標',
-                      subvalue: 5
-                    },
-                    {
-                      title: '年報資料查詢',
-                      subvalue: 6
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        })
-    }
+    this.navigationObserver = new ResizeObserver(this.checkNavigationFit)
+    this.navigationObserver.observe(this.$refs.header)
+    this.navigationObserver.observe(this.$refs.desktopMenu)
+    this.navigationObserver.observe(this.$refs.englishTitle)
+    this.checkNavigationFit()
+    if (this.isDynamicCharts) this.$nextTick(this.focusDynamicCharts)
+    if (!this.isHome) this.loadIntranetMenu()
+  },
+  beforeDestroy() {
+    if (this.navigationObserver) this.navigationObserver.disconnect()
   },
   methods: {
-    handleEscape(e) {
-      if (e.key === 'Escape' || e.key === 'Esc') {
-        this.leftmenu = false
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance('關閉選單'))
+    async loadIntranetMenu() {
+      const response = await axios
+        .post(this.RequetURL.backurl, qs.stringify({ op: 'FrontIsLogin' }))
+        .catch(() => null)
+      if (!response || response.status !== 200) return
+
+      const isLogin = response.data === 'Login'
+      this.RequetURL.isLogin = isLogin
+      this.intranetEnabled = isLogin
+    },
+    checkNavigationFit() {
+      const { header, desktopMenu, englishTitle } = this.$refs
+      const headerRight = header.getBoundingClientRect().right
+      const englishRight = englishTitle.getBoundingClientRect().right
+      const wasCompact = this.compactNavigation
+      this.compactNavigation =
+        header.clientWidth < 1110 ||
+        headerRight - desktopMenu.offsetWidth < englishRight + 16
+      const active = document.activeElement
+      if (
+        this.isDynamicCharts &&
+        wasCompact !== this.compactNavigation &&
+        (active === this.$refs.menuToggle || desktopMenu.contains(active))
+      ) {
+        this.$nextTick(this.focusDynamicCharts)
       }
+      if (wasCompact && !this.compactNavigation && this.menuOpen) {
+        this.$emit('showleftmenu', false)
+      }
+    },
+    focusDynamicCharts() {
+      const target = this.compactNavigation
+        ? this.$refs.menuToggle
+        : this.$refs.desktopMenu.querySelector('.dynamic-chart-tab')
+      if (target) target.focus({ preventScroll: true })
     },
     homeclick() {
       this.$router.push({
@@ -281,8 +301,7 @@ export default {
       })
     },
     poback() {
-      this.leftmenu = !this.leftmenu
-      this.$emit('showleftmenu', this.leftmenu)
+      this.$emit('showleftmenu', !this.menuOpen)
     },
     Lang(type) {
       const loc = this.$route.name
@@ -384,7 +403,7 @@ export default {
     },
     itemclick(mainidx, subidx) {
       const vm = this
-      const SubClick = vm.TopFunctionMenu[mainidx].SubList[subidx].subvalue
+      const SubClick = vm.functionMenu[mainidx].SubList[subidx].subvalue
       switch (SubClick) {
         case 3:
           vm.$store.commit('Utils/Menu/SET_TOPFUNCTIONID', 5)
@@ -419,6 +438,58 @@ export default {
 .headertitle,
 .headertitle_sub {
   cursor: pointer;
+}
+.header {
+  position: relative;
+  z-index: 11;
+}
+.desktop-navigation {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  width: max-content;
+  height: 55px;
+}
+.desktop-navigation .primary-menu-item {
+  display: flex;
+  flex: none;
+  height: 100%;
+}
+.desktop-navigation .FunctionItem {
+  flex: none;
+}
+.dynamic-chart-tab {
+  text-decoration: none;
+}
+.dynamic-chart-tab[aria-current='page'] {
+  border-bottom: 6px solid #85b2b5;
+}
+.header .compact-toggle {
+  display: none !important;
+}
+.header.compact .desktop-navigation {
+  visibility: hidden;
+  pointer-events: none;
+}
+.header.compact .compact-toggle {
+  display: block !important;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin: 0 12px 0 0;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  color: #fff;
+  font-size: 28px;
+}
+@media (min-width: 1110px) {
+  .header.compact .compact-toggle {
+    top: auto;
+    bottom: 3px;
+    transform: none;
+  }
 }
 .topnon {
   display: none;

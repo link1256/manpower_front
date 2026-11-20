@@ -1,6 +1,7 @@
 export const host = window.location.origin + '/dgbas_api'
 // export const host = 'http://localhost/dgbas_api/'
 export const RequetURL = {
+  dynamicCharts: host + '/DynamicCharts.ashx',
   ajaxurl: host + '/Common_Inquire.ashx',
   exporturl: host + '/ExportExcel.ashx',
   exporturl2: host + '/ExportExcel2.ashx',

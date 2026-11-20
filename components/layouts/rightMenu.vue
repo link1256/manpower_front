@@ -6,9 +6,18 @@
     :stateless="false"
     :right="true"
     :class="Show == true ? 'rightmenu' : 'rightmenu notshow'"
+    class="chinese-compact-drawer"
     width="300px"
   >
     <div class="leftdrawer">
+      <nuxt-link
+        to="/DynamicCharts"
+        exact-path
+        class="leftmenuparent leftmenuitem lefthover dynamic-chart-drawer-link"
+        :class="{ leftActive: $route.name === 'DynamicCharts' }"
+        @click.native="$emit('close')"
+        >動態統計圖</nuxt-link
+      >
       <div
         v-if="ComInq"
         :class="{
@@ -289,6 +298,9 @@ export default {
     }
   },
   watch: {
+    Show(value) {
+      if (!value && this.show) this.$emit('close')
+    },
     show() {
       const vm = this
       vm.Show = vm.show
@@ -473,6 +485,34 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.chinese-compact-drawer {
+  --compact-header-height: 80px;
+}
+.chinese-compact-drawer.rightmenu:not(.notshow) {
+  display: block !important;
+  position: fixed;
+  top: var(--compact-header-height) !important;
+  height: calc(100% - var(--compact-header-height)) !important;
+}
+.chinese-compact-drawer .leftdrawer {
+  position: static;
+  overflow-y: auto;
+}
+@media (max-width: 759px) {
+  .chinese-compact-drawer {
+    --compact-header-height: 40px;
+  }
+}
+@media (max-width: 479px) {
+  .chinese-compact-drawer {
+    --compact-header-height: 60px;
+  }
+}
+.dynamic-chart-drawer-link {
+  display: flex;
+  color: inherit;
+  text-decoration: none;
+}
 .notshow {
   display: none;
 }
