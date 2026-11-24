@@ -95,10 +95,10 @@ function stage(width, height) {
   }
 }
 
-function timeline({ years, stepMs }) {
-  let index = 0
-  let speedIndex = 0
-  let playing = years.length > 1
+function timeline({ years, stepMs }, previous) {
+  let index = Math.max(0, years.indexOf(previous?.year))
+  let speedIndex = Math.max(0, speeds.indexOf(previous?.speed))
+  let playing = years.length > 1 && (previous?.playing ?? true)
   let timer
   const subscribers = new Set()
   const state = () => ({
@@ -125,6 +125,7 @@ function timeline({ years, stepMs }) {
   schedule()
 
   return {
+    state,
     toggle() {
       if (years.length < 2) return
       playing = !playing
@@ -147,40 +148,62 @@ function timeline({ years, stepMs }) {
   }
 }
 
-export function mountChart(mount, root, rows, boundaries, assets) {
-  const cleanup = []
-  const dispose = () => {
-    cleanup.reverse().forEach((fn) => fn())
-    root.replaceChildren()
-  }
-  const context = {
-    d3,
-    id: 'dynamic-chart-' + ++nextChartId,
-    assets,
-    el,
-    css(id, text) {
-      const style = el('style', { 'data-dynamic-chart': id })
-      style.textContent = text
-      document.head.appendChild(style)
-      cleanup.push(() => style.remove())
-    },
-    stage(width, height) {
-      const chartStage = stage(width, height)
-      cleanup.push(chartStage.destroy)
-      return chartStage
-    },
-    timeline(options) {
-      const controls = timeline(options)
-      cleanup.push(controls.destroy)
-      return controls
+export function mountChart(mount, root, rows, boundaries, assets, responsive) {
+  const viewport = responsive ? matchMedia('(max-width: 640px)') : null
+  let disposeChart
+  let controls
+
+  function render() {
+    const previous = controls?.state()
+    const focusedControl = root.contains(document.activeElement)
+      ? document.activeElement.dataset.act
+      : null
+    if (disposeChart) disposeChart()
+    const cleanup = []
+    disposeChart = () => {
+      cleanup.reverse().forEach((fn) => fn())
+      root.replaceChildren()
+    }
+    const context = {
+      d3,
+      id: 'dynamic-chart-' + ++nextChartId,
+      assets,
+      el,
+      mobile: viewport?.matches ?? false,
+      css(id, text) {
+        const style = el('style', { 'data-dynamic-chart': id })
+        style.textContent = text
+        document.head.appendChild(style)
+        cleanup.push(() => style.remove())
+      },
+      stage(width, height) {
+        const chartStage = stage(width, height)
+        cleanup.push(chartStage.destroy)
+        return chartStage
+      },
+      timeline(options) {
+        controls = timeline(options, previous)
+        cleanup.push(controls.destroy)
+        return controls
+      }
+    }
+    try {
+      const unmount = mount(root, context, rows, boundaries)
+      if (unmount) cleanup.push(unmount)
+      if (focusedControl) {
+        const button = root.querySelector('[data-act="' + focusedControl + '"]')
+        if (button) button.focus({ preventScroll: true })
+      }
+    } catch (error) {
+      disposeChart()
+      throw error
     }
   }
-  try {
-    const unmount = mount(root, context, rows, boundaries)
-    if (unmount) cleanup.push(unmount)
-    return dispose
-  } catch (error) {
-    dispose()
-    throw error
+
+  render()
+  if (viewport) viewport.addEventListener('change', render)
+  return () => {
+    if (viewport) viewport.removeEventListener('change', render)
+    disposeChart()
   }
 }

@@ -110,7 +110,7 @@ function fetchBoundary(version) {
 }
 
 export default {
-  layout: 'BackStage_index',
+  layout: 'BackStage',
   data() {
     return { charts, status: 'loading' }
   },
@@ -184,7 +184,8 @@ export default {
             this.$refs.chart,
             rows,
             boundaries,
-            this.assetBase
+            this.assetBase,
+            chart.id !== 'notinlabor'
           )
         }
       } catch (error) {
@@ -242,7 +243,6 @@ export default {
   box-shadow: 0 8px 16px rgba(41, 43, 59, 0.12);
 }
 .dynamic-chart-links a[aria-current='page'] {
-  border-color: #719896;
   font-weight: 700;
 }
 .dynamic-chart-links img {

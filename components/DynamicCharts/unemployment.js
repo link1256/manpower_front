@@ -1,10 +1,32 @@
 // 歷年失業原因變化 — Figma Chart 42:12120 (main component 42:5036), 1140×694
 export default function mount(root, ctx, rowsData) {
-  const d3 = ctx.d3
+  const { d3, mobile } = ctx
   const A = ctx.assets + 'unemployment/'
   ctx.css(
     'unemployment',
     `
+      .unem-controls { display: contents; }
+      .unem .mobile-series { display: none; }
+      .unem.unem-mobile .unem-deco { display: none; }
+      .unem.unem-mobile .unem-ground { top: auto !important; bottom: 0; width: 100% !important; height: 55% !important; }
+      .unem.unem-mobile .tv { width: 332px; }
+      .unem.unem-mobile .tv .scr { width: auto; right: 6px; }
+      .unem.unem-mobile .tv-yr { left: 61px; top: 31px; transform: none; }
+      .unem.unem-mobile .unem-controls { display: block; position: absolute; inset: 0; pointer-events: none; transform: translate(-324px, 83px); }
+      .unem.unem-mobile .unem-controls button { pointer-events: auto; }
+      .unem.unem-mobile svg.plot { width: 420px; height: 100%; }
+      .unem.unem-mobile svg.plot text { font-size: 16px; }
+      .unem.unem-mobile .series path { stroke-width: 2.5px; }
+      .unem.unem-mobile .unit { left: 12px; top: 12px; font-size: 15px; }
+      .unem.unem-mobile .legend { left: 12px; right: auto; top: 77px; width: auto; font-size: 14px; }
+      .unem.unem-mobile .mobile-series { position: absolute; top: 36px; left: 12px; right: 12px; display: grid; grid-template-columns: 1fr 1.3fr; gap: 5px 6px; font: 700 14px/18px var(--font); color: #314158; }
+      .unem.unem-mobile .mobile-series span { display: flex; align-items: center; gap: 4px; }
+      .unem.unem-mobile .mobile-series img { width: 12px; height: 12px; }
+      .unem.unem-mobile .end text { display: none; }
+      .unem.unem-mobile .pin { top: 103px; font-size: 13px; }
+      .unem.unem-mobile .xunit { right: 12px; top: 582px; font-size: 15px; }
+      .unem.unem-mobile .hit { left: 37px; top: 124px; width: 367px; height: 431px; }
+      .unem.unem-mobile .tip { max-width: 400px; white-space: normal; font-size: 16px; line-height: 21px; }
       .unem svg.plot { position: absolute; left: 0; top: 0; width: 1140px; height: 694px; overflow: visible; pointer-events: none; }
       .unem svg.plot text { font-family: var(--font); font-size: 12px; font-weight: 700; }
       .unem .ylab { fill: #314158; text-anchor: end; dominant-baseline: middle; }
@@ -17,6 +39,7 @@ export default function mount(root, ctx, rowsData) {
       .unem .unit { position: absolute; left: 48px; top: 70px; font: 700 12px/16px var(--font-black); color: #62748e; white-space: nowrap; }
       .unem .legend { position: absolute; left: 133px; top: 45px; width: 785px; height: 16px; display: flex; justify-content: center; align-items: center; gap: 4px;
         font: 700 12px/16px var(--font); color: #62748e; white-space: nowrap; }
+      .unem .empty-period { fill: #62748e; font: 700 16px var(--font); text-anchor: middle; }
       .unem .legend i { width: 12px; height: 12px; border-radius: 2px; background: #d9d9d9; }
       .unem .xunit { position: absolute; right: calc(1140px - 930px); top: 508px; font: 700 12px/16px var(--font); color: #62748e; }
       .unem .pin { position: absolute; top: 66px; padding: 4px 6px; border-radius: 999px; background: #f35380; color: #fff; font: 700 12px/16px var(--font); white-space: nowrap; pointer-events: none; }
@@ -52,7 +75,15 @@ export default function mount(root, ctx, rowsData) {
     `
   )
 
-  const Y0 = d3.min(rowsData, (row) => row.year)
+  const EVENTS = [
+    { t: 71, name: '第二次石油危機' },
+    { t: 85, name: '亞洲金融風暴' },
+    { t: 90, name: '網路泡沫' },
+    { t: 98, name: '金融海嘯' },
+    { t: 109, name: 'COVID-19疫情' }
+  ]
+  const firstDataYear = d3.min(rowsData, (row) => row.year)
+  const Y0 = Math.min(firstDataYear, EVENTS[0].t)
   const Y1 = d3.max(rowsData, (row) => row.year)
   const endMonth = d3.max(
     rowsData.filter((row) => row.year === Y1),
@@ -103,11 +134,6 @@ export default function mount(root, ctx, rowsData) {
     if (series) series.v[(row.year - Y0) * 12 + row.month - 1] = row.value
   }
 
-  const EVENTS = [
-    { t: 90, name: '網路泡沫' },
-    { t: 98, name: '金融海嘯' },
-    { t: 109, name: 'COVID-19疫情' }
-  ]
   // blocks of 10 years; the x scale spans Jan y … Dec y+9 so consecutive blocks have no gap
   const YEARS = d3.range(Y0, Y1 + 1, 10)
   const SPAN = 9 + 11 / 12
@@ -117,10 +143,12 @@ export default function mount(root, ctx, rowsData) {
   const endYear = (c) => Math.min(c + 9, Y1)
 
   // ---------- geometry (card coordinates from Figma) ----------
-  const X0 = 133
-  const X1 = 918
-  const YT = 96
-  const YB = 478
+  const cardWidth = mobile ? 420 : 1140
+  const cardHeight = mobile ? 777 : 694
+  const X0 = mobile ? 43 : 133
+  const X1 = mobile ? 398 : 918
+  const YT = mobile ? 130 : 96
+  const YB = mobile ? 550 : 478
   const LABEL_X = 936
   const maxValue = Math.max(
     50,
@@ -130,18 +158,19 @@ export default function mount(root, ctx, rowsData) {
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches
 
   // ---------- stage ----------
-  const S = ctx.stage(1140, 694)
+  const S = ctx.stage(cardWidth, cardHeight)
   const card = S.card
   card.classList.add('unem')
+  card.classList.toggle('unem-mobile', mobile)
   card.innerHTML = `
-      <div class="abs" style="left:0;top:542px;width:1140px;height:334px;overflow:hidden"><img class="abs" src="${A}bg.png" alt="" style="left:0;top:2.14%;width:100%;height:97.86%"></div>
-      <svg class="plot" viewBox="0 0 1140 694" aria-hidden="true">
+      <div class="abs unem-ground" style="left:0;top:542px;width:1140px;height:334px;overflow:hidden"><img class="abs" src="${A}bg.png" alt="" style="left:0;top:2.14%;width:100%;height:97.86%"></div>
+      <svg class="plot" viewBox="0 0 ${cardWidth} ${cardHeight}" aria-hidden="true">
         <defs><clipPath id="unem-clip"><rect x="${X0}" y="0" width="${X1 -
-    X0}" height="694"></rect></clipPath>
+    X0}" height="${cardHeight}"></rect></clipPath>
           <clipPath id="unem-clip-l"><rect class="reveal" x="${X0 -
             2}" y="0" width="${X1 -
     X0 +
-    4}" height="694"></rect></clipPath></defs>
+    4}" height="${cardHeight}"></rect></clipPath></defs>
         <g class="bands" clip-path="url(#unem-clip)"></g>
         <g class="grid"></g>
         <g class="ylabs"></g>
@@ -154,10 +183,26 @@ export default function mount(root, ctx, rowsData) {
       </svg>
       <div class="unit">單位：千人</div>
       <div class="legend"><i></i>畢業季(每年5~9月)</div>
+      ${
+        mobile
+          ? '<div class="mobile-series">' +
+            SERIES.map(
+              (s) =>
+                '<span><img src="' +
+                A +
+                s.dot +
+                '" alt="">' +
+                s.name +
+                '</span>'
+            ).join('') +
+            '</div>'
+          : ''
+      }
       <div class="xunit">民國</div>
       <div class="pins"></div>
       <div class="hit" tabindex="0" role="img" aria-label="歷年失業原因折線圖，聚焦後可用左右方向鍵逐月查看數值"></div>
       <div class="tip" role="status" aria-live="polite"></div>
+      <div class="unem-controls">
       <div class="abs" style="left:542px;top:678px;width:56px;height:16px;background:#a9a9a9"></div>
       <div class="abs" style="left:547px;top:684px;width:5px;height:5px;border-radius:99px;background:#a4daa2"></div>
       <div class="tv">
@@ -178,8 +223,9 @@ export default function mount(root, ctx, rowsData) {
         <img src="${A}speed.svg" alt="" style="left:0;top:0;width:53.8879px;height:53.8064px">
         <span class="spd">1x</span>
       </button>
-      <img class="abs" src="${A}man.svg" alt="" style="left:-19px;top:526px;width:228.2px;height:218.4px">
-      <img class="abs" src="${A}woman.svg" alt="" style="left:986px;top:491px;width:113.1px;height:286px">`
+      </div>
+      <img class="abs unem-deco" src="${A}man.svg" alt="" style="left:-19px;top:526px;width:228.2px;height:218.4px">
+      <img class="abs unem-deco" src="${A}woman.svg" alt="" style="left:986px;top:491px;width:113.1px;height:286px">`
   const q = (s) => card.querySelector(s)
   const svg = d3.select(q('svg.plot'))
   const tip = q('.tip')
@@ -202,7 +248,7 @@ export default function mount(root, ctx, rowsData) {
     .data(yTicks)
     .join('text')
     .attr('class', 'ylab')
-    .attr('x', 108)
+    .attr('x', mobile ? 36 : 108)
     .attr('y', (d) => y(d))
     .text((d) => d)
 
@@ -253,16 +299,27 @@ export default function mount(root, ctx, rowsData) {
     .y((d) => d.y)
   const revealRect = q('rect.reveal')
 
+  const emptyPeriod = svg
+    .append('text')
+    .attr('class', 'empty-period')
+    .attr('x', (X0 + X1) / 2)
+    .attr('y', (YT + YB) / 2)
+    .text('此區間無失業原因統計資料')
+
   let renderedYear
   function renderPlot() {
     if (renderedYear === cur) return
     renderedYear = cur
+    emptyPeriod.attr(
+      'visibility',
+      endYear(cur) < firstDataYear ? 'visible' : 'hidden'
+    )
     const yrs = isLast(cur) ? d3.range(cur, Y1 + 2) : d3.range(cur, cur + 10)
     // graduation-season bands: May → Sep (only for years that have data)
     svg
       .select('.bands')
       .selectAll('rect')
-      .data(yrs.filter((Y) => Y <= Y1))
+      .data(yrs.filter((Y) => Y >= firstDataYear && Y <= Y1))
       .join('rect')
       .attr('class', 'band')
       .attr('y', YT)
@@ -273,7 +330,15 @@ export default function mount(root, ctx, rowsData) {
     svg
       .select('.xticks')
       .selectAll('g')
-      .data(yrs)
+      .data(
+        mobile
+          ? yrs.filter(
+              (year) =>
+                (year - cur) % 2 === 0 ||
+                EVENTS.some((event) => event.t === year)
+            )
+          : yrs
+      )
       .join((en) => {
         const g = en.append('g')
         g.append('line')
@@ -327,7 +392,10 @@ export default function mount(root, ctx, rowsData) {
       const px = xOf(d.t)
       const width = d.pinWidth || (d.pinWidth = this.offsetWidth || 60)
       this.style.left =
-        Math.min(1132 - width, Math.max(8, px - width / 2)) + 'px'
+        Math.min(
+          cardWidth - 8 - width,
+          Math.max(mobile ? X0 : 8, px - width / 2)
+        ) + 'px'
     })
     eventLines.attr('x1', (d) => xOf(d.t)).attr('x2', (d) => xOf(d.t))
   }
@@ -346,7 +414,7 @@ export default function mount(root, ctx, rowsData) {
     .join('line')
     .attr('stroke', '#f35380')
     .attr('stroke-width', 2)
-    .attr('y1', 86)
+    .attr('y1', mobile ? YT - 4 : 86)
     .attr('y2', YB)
 
   // Geometry depends on the decade. Only the clip and opacity change per frame.
@@ -416,9 +484,9 @@ export default function mount(root, ctx, rowsData) {
     const w = tip.offsetWidth
     const h = tip.offsetHeight
     let left = gx + 14
-    if (left + w > 1132) left = gx - 14 - w
+    if (left + w > cardWidth - 8) left = gx - 14 - w
     const py = hov.py != null ? hov.py - h / 2 : 88
-    tip.style.left = left + 'px'
+    tip.style.left = Math.max(8, left) + 'px'
     tip.style.top = Math.max(70, Math.min(YB - h, py)) + 'px'
     tip.classList.add('on')
   }

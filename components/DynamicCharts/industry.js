@@ -1,7 +1,7 @@
 // 歷年前十大就業行業排行 — Figma Chart 42:4744 (main component 42:4743), 1140×814
 // Bar-chart race: rows are HTML divs positioned in Figma coordinates, moved with CSS transitions; numbers tween with d3.
 export default function mount(root, ctx, rowsData) {
-  const d3 = ctx.d3
+  const { d3, mobile } = ctx
   const A = ctx.assets + 'industry/'
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches
   const STEP_MS = 1800 // time per year at 1x (ctx.timeline stepMs)
@@ -58,10 +58,28 @@ export default function mount(root, ctx, rowsData) {
       .ind .cal-page { position: absolute; left: 955px; top: 661px; width: 157.2px; height: 89px; perspective: 520px; perspective-origin: 50% 0; pointer-events: none; }
       .ind .cal-page .sheet { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
       .ind .cal-page .leaf { background: #f4eae4; border-radius: 0 0 6px 6px; transform-origin: 50% 0; box-shadow: 0 1px 2px rgba(0,0,0,.1); will-change: transform, opacity; }
-      .ind .cal-page .lbl { position: absolute; left: 37px; top: 5px; width: 40px; text-align: center; font: 700 20px/27px var(--font); color: #37474f; }
-      .ind .cal-page .num { position: absolute; left: 38px; top: 21px; height: 64px; display: flex; align-items: baseline; color: #37474f; font-weight: 700; white-space: nowrap; }
+      .ind .cal-page .lbl { position: absolute; left: 0; top: 5px; width: 100%; text-align: center; font: 700 20px/27px var(--font); color: #37474f; }
+      .ind .cal-page .num { position: absolute; left: 50%; top: 21px; height: 64px; transform: translateX(-50%); display: flex; align-items: baseline; color: #37474f; font-weight: 700; white-space: nowrap; }
       .ind .cal-page .num .n { font-size: 48px; line-height: 64px; font-variant-numeric: tabular-nums; }
-      .ind .cal-page .num .u { font-size: 20px; margin-left: 5px; }
+      .ind .cal-page .num .u { position: absolute; left: calc(100% + 5px); top: 28px; font-size: 20px; }
+      .ind-controls { display: contents; }
+      .ind-mobile .ind-deco, .ind-mobile .ico { display: none; }
+      .ind-mobile .ind-ground { height: 54% !important; }
+      .ind-mobile .ind-table-top, .ind-mobile .ind-table-edge { width: 388px !important; }
+      .ind-mobile .ind-controls { display: block; position: absolute; inset: 0; pointer-events: none; transform: translate(-723px, 34px); }
+      .ind-mobile .ind-controls button { pointer-events: auto; }
+      .ind-mobile .clip, .ind-mobile .axis { left: 14px; top: 12px; width: 392px; height: 626px; }
+      .ind-mobile .grid { width: 392px; height: 626px; }
+      .ind-mobile .unit { top: 0; font-size: 15px; }
+      .ind-mobile .tick { top: 28px; font-size: 14px; }
+      .ind-mobile .industry-row { width: 392px; height: 53px; }
+      .ind-mobile .lab { width: 148px; height: 53px; gap: 4px; font-size: 16px; line-height: 18px; text-align: right; }
+      .ind-mobile .lab .nm { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+      .ind-mobile .lab .medal { width: 16px; height: 16px; }
+      .ind-mobile .bar { left: 158px; top: 11px; height: 30px; }
+      .ind-mobile .val { top: 11px; height: 30px; width: 43px; font-size: 16px; line-height: 30px; }
+      .ind-mobile .tip { max-width: 390px; white-space: normal; font-size: 16px; }
+      .ind-mobile .tip .arrow { display: none; }
     `
   )
 
@@ -112,21 +130,26 @@ export default function mount(root, ctx, rowsData) {
     })
 
   // ---------- geometry (Chart Area 136:19226 at 24,24 · 1092×580) ----------
-  const X0 = 294 // bar origin inside the chart area
+  const cardWidth = mobile ? 420 : 1140
+  const chartWidth = mobile ? 392 : 1092
+  const chartHeight = mobile ? 626 : 580
+  const chartInset = mobile ? 14 : 24
+  const X0 = mobile ? 158 : 294
   const maxValue = Math.max(
     500,
     Math.ceil(d3.max(rowsData, (row) => row.value) / 500) * 500
   )
-  const x = d3.scaleLinear([0, maxValue], [0, 786]) // 0 → card x 318, 3000 → card x 1104 (Figma gridlines)
-  const ROW0 = 76
-  const STEP = (480 - 34) / 9 // 10 rows of 34px, justify-between over 480px
+  const x = d3.scaleLinear([0, maxValue], [0, mobile ? 180 : 786]) // 0 → card x 318, 3000 → card x 1104 (Figma gridlines)
+  const ROW0 = mobile ? 52 : 76
+  const STEP = mobile ? 57 : (480 - 34) / 9 // 10 rows of 34px, justify-between over 480px
   const OUT_SLOT = 10.6 // parking slot for rows outside the top 10 (below the clip)
   const rowY = (r) => ROW0 + (r <= 10 ? r - 1 : OUT_SLOT) * STEP
   const fmt = d3.format(',')
 
-  const S = ctx.stage(1140, 814)
+  const S = ctx.stage(cardWidth, mobile ? 848 : 814)
   const card = S.card
   card.classList.add('ind')
+  card.classList.toggle('ind-mobile', mobile)
   card.style.setProperty('--ind-d', DUR + 'ms')
   const ICONS = [
     ['palette', 175, 700, 50, 50],
@@ -142,15 +165,16 @@ export default function mount(root, ctx, rowsData) {
     ['microscope', 676, 722, 30, 30]
   ]
   card.innerHTML = `
-      <div class="abs" style="left:0;right:0;bottom:0;height:334px;overflow:hidden"><img class="abs" src="${A}bg.png" alt="" style="left:0;top:2.14%;width:100%;height:97.86%"></div>
+      <div class="abs ind-ground" style="left:0;right:0;bottom:0;height:334px;overflow:hidden"><img class="abs" src="${A}bg.png" alt="" style="left:0;top:2.14%;width:100%;height:97.86%"></div>
       ${ICONS.map(
         ([n, l, t, w, h], i) =>
           `<img class="ico" src="${A}icon-${n}.png" alt="" style="left:${l}px;top:${t}px;width:${w}px;height:${h}px;animation-delay:${-(
             i * 0.73
           ) % 4}s">`
       ).join('')}
-      <img class="abs" src="${A}table.svg" alt="" style="left:755px;top:698px;width:385px;height:76px">
-      <div class="abs" style="left:755px;top:774px;width:385px;height:16px;background:#978070"></div>
+      <div class="ind-controls">
+      <img class="abs ind-table-top" src="${A}table.svg" alt="" style="left:755px;top:698px;width:385px;height:76px">
+      <div class="abs ind-table-edge" style="left:755px;top:774px;width:385px;height:16px;background:#978070"></div>
       <div class="abs" style="left:783px;top:790.15px;width:30px;height:23.85px;background:#978070"></div>
       <div class="abs" style="left:783px;top:790.15px;width:30px;height:8.673px;background:#796353"></div>
       <img class="abs" src="${A}calendar.png" alt="" style="left:955px;top:624px;width:157.2px;height:139.308px">
@@ -166,9 +190,10 @@ export default function mount(root, ctx, rowsData) {
       <button class="key" data-act="speed" type="button" aria-label="播放速度 1x" style="left:885px;top:709px">
         <img src="${A}speed.svg" alt="" width="53.8879" height="53.8064"><span class="face">1x</span>
       </button>
-      <img class="abs" src="${A}man.svg" alt="" style="left:47px;top:651px;width:123.12px;height:313.2px">
+      </div>
+      <img class="abs ind-deco" src="${A}man.svg" alt="" style="left:47px;top:651px;width:123.12px;height:313.2px">
       <div class="clip">
-        <svg class="grid" viewBox="0 0 1092 580" aria-hidden="true"></svg>
+        <svg class="grid" viewBox="0 0 ${chartWidth} ${chartHeight}" aria-hidden="true"></svg>
         <div class="rows" role="list" aria-label="前十大就業行業"></div>
       </div>
       <div class="axis"><div class="unit">單位:千人</div><div class="ticks" aria-hidden="true"></div></div>
@@ -178,15 +203,19 @@ export default function mount(root, ctx, rowsData) {
   const tip = q('.tip')
 
   // axis + gridlines (Lines 136:19228: x 294→1092, y 44→532)
-  const TICKS = d3.range(0, maxValue + 1, 500)
+  const TICKS = d3.range(
+    0,
+    maxValue + 1,
+    mobile ? Math.max(500, Math.ceil(maxValue / 2000) * 500) : 500
+  )
   d3.select(q('.grid'))
     .selectAll('line')
     .data(TICKS)
     .join('line')
     .attr('x1', (v) => X0 + x(v) + 0.5)
     .attr('x2', (v) => X0 + x(v) + 0.5)
-    .attr('y1', 68)
-    .attr('y2', 556)
+    .attr('y1', mobile ? 48 : 68)
+    .attr('y2', mobile ? 621 : 556)
   d3.select(q('.ticks'))
     .selectAll('span')
     .data(TICKS)
@@ -252,7 +281,7 @@ export default function mount(root, ctx, rowsData) {
         d.medal = m
       }
       row.select('.bar').style('width', w + 'px')
-      const inside = X0 + w + 8 + 50 > 1092
+      const inside = X0 + w + 8 + 50 > chartWidth
       row
         .select('.val')
         .classed('inside', inside)
@@ -309,14 +338,17 @@ export default function mount(root, ctx, rowsData) {
   }
   function placeTip(px, py) {
     const w = tip.offsetWidth
-    const flip = px + 16 + w > 1132
+    const flip = px + 16 + w > cardWidth - 8
     tip.classList.toggle('flip', flip)
-    tip.style.left = (flip ? px - 16 - w : px + 16) + 'px'
+    tip.style.left = Math.max(8, flip ? px - 16 - w : px + 16) + 'px'
     tip.style.top = Math.max(8, py - 42) + 'px'
   }
   function placeFocusTip(d) {
     const r = RANK[year][d.id]
-    placeTip(24 + X0 + x(d.v[year]) - 6, 24 + ROW0 + (r - 1) * STEP + 17)
+    placeTip(
+      chartInset + X0 + x(d.v[year]) - 6,
+      (mobile ? 12 : 24) + rowY(r) + (mobile ? 39 : 17)
+    )
   }
   function showTip(d, mode) {
     hot = d

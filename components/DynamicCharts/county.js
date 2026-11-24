@@ -1,15 +1,15 @@
 // 歷年縣市別勞動參與率變化 — Figma Chart 42:13046 (main component 42:5616), 1140×914
 export default function mount(root, ctx, rowsData, boundaries) {
-  const d3 = ctx.d3
+  const { d3, mobile } = ctx
   const A = ctx.assets + 'county/'
   ctx.css(
     'county',
     `
       .cty .map-snapshot { position: absolute; left: 0; top: 0; width: 660px; height: 914px; pointer-events: none; display: none; }
-      .cty.map-static:not(.map-key-active) .map-snapshot { display: block; }
-      .cty.map-static:not(.map-key-active) .wall { display: none; }
-      .cty.map-static:not(.map-key-active) .county { fill-opacity: 0; stroke-opacity: 0; pointer-events: fill; filter: none; }
-      .cty.map-static:not(.map-key-active) .county:is(:hover, .active, :focus-visible) { stroke-opacity: 1; }
+      .cty:is(.map-static, .map-buffered.map-scrolling):not(.map-key-active) .map-snapshot { display: block; }
+      .cty:is(.map-static, .map-buffered.map-scrolling):not(.map-key-active) .wall { display: none; }
+      .cty:is(.map-static, .map-buffered.map-scrolling):not(.map-key-active) .county { fill-opacity: 0; stroke-opacity: 0; pointer-events: fill; filter: none; }
+      .cty:is(.map-static, .map-buffered.map-scrolling):not(.map-key-active) .county:is(:hover, .active, :focus-visible) { stroke-opacity: 1; }
       .cty #map { position: absolute; left: 0; top: 0; width: 660px; height: 914px; overflow: visible; }
       .cty .county { stroke: #f7fbfb; stroke-width: .8; stroke-linejoin: round; cursor: pointer; transition: transform var(--county-rise-ms, 0ms) ease-in-out, fill .45s ease; outline: none; }
       .cty .county:hover, .cty .county.active { stroke: #fff; stroke-width: 2.4; filter: brightness(1.05); }
@@ -44,6 +44,8 @@ export default function mount(root, ctx, rowsData, boundaries) {
       .cty .year-num .n { display: inline-block; font-size: 44px; font-variant-numeric: tabular-nums; }
       .cty .year-num .u { font-size: 20px; margin-left: 6px; }
       /* right-side ambient motion while playing (client 2026-11-16) */
+      .cty.map-scrolling .chip { transition: none; }
+      .cty.playing.map-scrolling :is(.amb-woman, .amb-bag, .amb-mon) { animation-play-state: paused; }
       .cty .amb-bag { transform-origin: 50% 18%; }
       .cty .amb-mon { transform-origin: 50% 60%; }
       .cty.playing .amb-woman { animation: cty-bob 2.4s ease-in-out infinite; }
@@ -52,6 +54,39 @@ export default function mount(root, ctx, rowsData, boundaries) {
       @keyframes cty-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
       @keyframes cty-swing { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
       @keyframes cty-blink { 0%, 78%, 100% { transform: scale(1); filter: none; } 86% { transform: scale(1.08); filter: brightness(1.15); } }
+      .cty-mobile > .abs:not(:is(.yc, .county-bg, .shelf-back, .shelf-insert, .shelf-folder, .shelf-box, .shelf-dots, .shelf-book, .county-platform)) { display: none; }
+      .cty-mobile #map, .cty-mobile .map-snapshot, .cty-mobile .labels { width: 420px; height: 674px; }
+      .cty-mobile .chip { font-size: 15px; line-height: 19px; }
+      .cty-mobile .legend { left: 32px; top: 12px; width: 356px; height: 56px; }
+      .cty-mobile .legend .ttl { justify-content: center; font-size: 17px; height: 21px; }
+      .cty-mobile .legend .body { flex-direction: column; }
+      .cty-mobile .legend .bars { flex-direction: row; width: 100%; height: 14px; }
+      .cty-mobile .legend .bars button:is(:hover, :focus-visible) { transform: scaleY(1.4); }
+      .cty-mobile .legend .ticks { flex-direction: row; }
+      .cty.cty-mobile { --books-top: 742px; --play-left: 238px; --book-scale: .75; }
+      .cty-mobile .county-bg { width: 100% !important; height: 43% !important; }
+      .cty-mobile .shelf-back { left: 156px !important; top: 698px !important; width: 119px !important; height: 146px !important; }
+      .cty-mobile .shelf-back + .shelf-back { left: 165px !important; top: 709px !important; height: 135px !important; }
+      .cty-mobile .shelf-back + .shelf-back + .shelf-back { left: 173px !important; top: 692px !important; height: 152px !important; }
+      .cty-mobile .shelf-insert { left: 183px !important; top: 689px !important; width: 106px !important; height: 155px !important; }
+      .cty-mobile .shelf-folder { left: 157px !important; top: 687px !important; height: 157px !important; }
+      .cty-mobile .shelf-box { left: 157px !important; top: 795px !important; width: 42px !important; height: 49px !important; z-index: 2; }
+      .cty-mobile .shelf-dots { left: 203px !important; top: 714px !important; width: 99px !important; height: 130px !important; }
+      .cty-mobile .shelf-book { left: 213px !important; top: var(--books-top) !important; width: 84.41px !important; height: 102px !important; }
+      .cty-mobile .yc { left: 46px !important; top: var(--books-top) !important; width: 120px !important; height: 102px !important; z-index: 1; }
+      .cty-mobile .yc img { width: 100% !important; height: 100% !important; }
+      .cty-mobile .year-label, .cty-mobile .year-num { left: 34px; color: #fff; }
+      .cty-mobile .year-label { top: 16px; font-size: 14px; line-height: 22px; }
+      .cty-mobile .year-num { top: 33px; height: auto; }
+      .cty-mobile .year-num .n { font-size: 32px; }
+      .cty-mobile .year-num .u { font-size: 14px; }
+      .cty-mobile .book { top: var(--books-top) !important; z-index: 2; transform-origin: top left; transform: scale(var(--book-scale)); }
+      .cty-mobile .book:is(:hover, :focus-visible) { transform: translateY(-6px) scale(var(--book-scale)); }
+      .cty-mobile .book[data-act="play"] { left: var(--play-left) !important; }
+      .cty-mobile .book[data-act="speed"] { left: calc(var(--play-left) + 84.41px) !important; }
+      .cty-mobile .county-platform { left: 0 !important; top: 844px !important; width: 100% !important; height: 17px !important; }
+      .cty-mobile .tip { font-size: 15px; line-height: 20px; }
+      .cty-mobile .tip .arrow { display: none; }
     `
   )
 
@@ -68,13 +103,17 @@ export default function mount(root, ctx, rowsData, boundaries) {
   const binOf = (value) => BINS.filter((bin) => value >= bin).length
 
   // ---------- stage ----------
-  const S = ctx.stage(1140, 914)
+  const cardWidth = mobile ? 420 : 1140
+  const mapWidth = mobile ? 420 : 660
+  const mapHeight = mobile ? 674 : 914
+  const S = ctx.stage(cardWidth, mobile ? 861 : 914)
   const card = S.card
   card.classList.add('cty')
+  card.classList.toggle('cty-mobile', mobile)
   card.innerHTML = `
-      <div class="abs" style="left:0;bottom:0;width:1140px;height:350px;overflow:hidden"><img class="abs" src="${A}bg.png" alt="" style="left:0;top:2.14%;width:100%;height:97.86%"></div>
+      <div class="abs county-bg" style="left:0;bottom:0;width:1140px;height:350px;overflow:hidden"><img class="abs" src="${A}bg.png" alt="" style="left:0;top:2.14%;width:100%;height:97.86%"></div>
       <canvas class="map-snapshot" aria-hidden="true"></canvas>
-      <svg id="map" viewBox="0 0 660 914" aria-label="各縣市勞動力參與率地圖"></svg>
+      <svg id="map" viewBox="0 0 ${mapWidth} ${mapHeight}" aria-label="各縣市勞動力參與率地圖"></svg>
       <div class="labels"></div>
       <div class="legend" aria-label="圖例">
         <div class="ttl">勞動力參與率 (%)</div>
@@ -86,19 +125,21 @@ export default function mount(root, ctx, rowsData, boundaries) {
         <div class="abs amb-bag" style="left:21px;top:29px;width:132.476px;height:115.744px;display:flex;align-items:center;justify-content:center">
           <img src="${A}briefcase.svg" alt="" style="width:121.216px;height:102.077px;transform:rotate(6.82deg)"></div>
       </div>
-      <img class="abs" src="${A}shelf-v0.svg" alt="" style="left:724px;top:595px;width:155.316px;height:210px">
-      <img class="abs" src="${A}shelf-v1.svg" alt="" style="left:733.758px;top:627.02px;width:145.558px;height:177.98px">
-      <img class="abs" src="${A}shelf-v2.svg" alt="" style="left:745.491px;top:612.981px;width:144.435px;height:192.019px">
+      <img class="abs shelf-back" src="${A}shelf-v0.svg" alt="" style="left:724px;top:595px;width:155.316px;height:210px">
+      <img class="abs shelf-back" src="${A}shelf-v1.svg" alt="" style="left:733.758px;top:627.02px;width:145.558px;height:177.98px">
+      <img class="abs shelf-back" src="${A}shelf-v2.svg" alt="" style="left:745.491px;top:612.981px;width:144.435px;height:192.019px">
       <div class="abs yc" style="left:760px;top:487px;width:141.439px;height:203.251px">
-        <img class="abs" src="${A}shelf-yearcard.svg" alt="" style="left:0;top:0;width:141.439px;height:203.251px">
+        <img class="abs" src="${A}${
+    mobile ? 'bg_book.svg' : 'shelf-yearcard.svg'
+  }" alt="" style="left:0;top:0;width:141.439px;height:203.251px">
         <div class="year-label">民國</div>
         <div class="year-num" aria-hidden="true"><span class="n">95</span><span class="u">年</span></div>
       </div>
-      <img class="abs" src="${A}shelf-v4.svg" alt="" style="left:780px;top:602px;width:134px;height:203px">
-      <img class="abs" src="${A}shelf-v5.svg" alt="" style="left:780.023px;top:595px;width:155.316px;height:210px">
-      <img class="abs" src="${A}shelf-v6.svg" alt="" style="left:724px;top:740.275px;width:56.023px;height:64.717px">
-      <img class="abs" src="${A}shelf-g0.svg" alt="" style="left:799.126px;top:632.847px;width:117.179px;height:153.977px">
-      <img class="abs" src="${A}shelf-g1.svg" alt="" style="left:857.681px;top:669.198px;width:112.545px;height:135.802px">
+      <img class="abs shelf-insert" src="${A}shelf-v4.svg" alt="" style="left:780px;top:602px;width:134px;height:203px">
+      <img class="abs shelf-folder" src="${A}shelf-v5.svg" alt="" style="left:780.023px;top:595px;width:155.316px;height:210px">
+      <img class="abs shelf-box" src="${A}shelf-v6.svg" alt="" style="left:724px;top:740.275px;width:56.023px;height:64.717px">
+      <img class="abs shelf-dots" src="${A}shelf-g0.svg" alt="" style="left:799.126px;top:632.847px;width:117.179px;height:153.977px">
+      <img class="abs shelf-book" src="${A}shelf-g1.svg" alt="" style="left:857.681px;top:669.198px;width:112.545px;height:135.802px">
       <button class="book" data-act="play" type="button" aria-label="播放" style="left:892.568px;top:669.198px;width:112.553px;height:135.802px">
         <img src="${A}shelf-g2.svg" alt="" style="left:0;top:0;width:112.553px;height:135.802px">
         <img class="play" src="${A}play.svg" alt="" style="left:54.432px;top:55.802px;width:25px;height:30px">
@@ -110,7 +151,7 @@ export default function mount(root, ctx, rowsData, boundaries) {
         <img src="${A}speed-v9.svg" alt="" style="left:2.296px;top:3.349px;width:9.285px;height:9.227px">
         <span class="speed-txt">1x</span>
       </button>
-      <div class="abs" style="left:697px;top:805px;width:443px;height:28px;background:#e2e5d9"></div>
+      <div class="abs county-platform" style="left:697px;top:805px;width:443px;height:28px;background:#e2e5d9"></div>
       <div class="abs" style="left:723px;top:833px;width:232px;height:81px;background:#cbcec2"></div>
       <div class="abs" style="left:955px;top:833px;width:185px;height:81px;background:#9ca28b"></div>
       <div class="abs" style="left:724px;top:879px;width:231px;height:5px;background:#abaf9e"></div>
@@ -142,25 +183,28 @@ export default function mount(root, ctx, rowsData, boundaries) {
   const snapshotContext =
     typeof Path2D === 'function' ? snapshot.getContext('2d') : null
   if (snapshotContext) {
+    card.classList.add('map-buffered')
     const density = Math.min(window.devicePixelRatio || 1, 2)
-    snapshot.width = Math.round(660 * density)
-    snapshot.height = Math.round(914 * density)
-    snapshotContext.scale(snapshot.width / 660, snapshot.height / 914)
+    snapshot.width = Math.round(mapWidth * density)
+    snapshot.height = Math.round(mapHeight * density)
+    snapshotContext.scale(
+      snapshot.width / mapWidth,
+      snapshot.height / mapHeight
+    )
     snapshotContext.lineJoin = 'round'
   }
   const svg = d3.select(q('#map'))
   const labels = d3.select(q('.labels'))
   const allFeatures = Object.values(geometries).flat()
-  const proj = d3.geoMercator().fitExtent(
-    [
-      [48, 66],
-      [600, 840]
-    ],
-    {
-      type: 'FeatureCollection',
-      features: allFeatures
-    }
-  )
+  const proj = d3
+    .geoMercator()
+    .fitExtent(
+      [mobile ? [20, 110] : [48, 66], mobile ? [400, 650] : [600, 840]],
+      {
+        type: 'FeatureCollection',
+        features: allFeatures
+      }
+    )
   const path = d3.geoPath(proj)
   const LAYERS = 12
   const H_MIN = 3
@@ -187,6 +231,13 @@ export default function mount(root, ctx, rowsData, boundaries) {
       '63': [-13, 2]
     }
   }
+  const mobileLabelOffsets = {
+    臺北市: [-17, -38],
+    新北市: [33, 0],
+    嘉義市: [-32, 3],
+    高雄縣: [22, 0],
+    澎湖縣: [5, 0]
+  }
   let features = []
   let groups
   let tops
@@ -205,8 +256,9 @@ export default function mount(root, ctx, rowsData, boundaries) {
         f.shape = path(f)
         const centroid = path.centroid(f)
         const nudge = labelOffsets[version][f.code] || [0, 0]
+        const [dx, dy] = (mobile && mobileLabelOffsets[f.name]) || [0, 0]
         f.cy = centroid[1]
-        f.anchor = [centroid[0] + nudge[0], centroid[1] + nudge[1]]
+        f.anchor = [centroid[0] + nudge[0] + dx, centroid[1] + nudge[1] + dy]
       }
       defs
         .append('path')
@@ -249,10 +301,10 @@ export default function mount(root, ctx, rowsData, boundaries) {
     activeVersion = version
   }
 
-  // Cache the settled map as one surface. SVG paths still handle focus and hit testing.
+  // Prepare a single surface for the settled map. SVG paths still handle hit testing.
   function drawSnapshot() {
     if (!snapshotContext) return
-    snapshotContext.clearRect(0, 0, 660, 914)
+    snapshotContext.clearRect(0, 0, mapWidth, mapHeight)
     groups.each((feature) => {
       if (!feature.snapshotPath)
         feature.snapshotPath = new Path2D(feature.shape)
@@ -274,10 +326,11 @@ export default function mount(root, ctx, rowsData, boundaries) {
       snapshotContext.stroke(shape)
       snapshotContext.restore()
     })
-    card.classList.add('map-static')
   }
 
+  let settleTimer
   function paint(y, duration) {
+    clearTimeout(settleTimer)
     card.classList.remove('map-static')
     const period = byYear.get(y)
     const switchVersion = activeVersion !== period.version
@@ -326,6 +379,13 @@ export default function mount(root, ctx, rowsData, boundaries) {
       labels
         .node()
         .animate([{ opacity: 0.25 }, { opacity: 1 }], { duration: 280 })
+    }
+    if (snapshotContext) {
+      drawSnapshot()
+      const settle = () => card.classList.add('map-static')
+      const motionMs = fade ? 280 : switchVersion || reduce ? 0 : duration
+      if (motionMs) settleTimer = setTimeout(settle, Math.max(motionMs, 450))
+      else settle()
     }
   }
 
@@ -382,7 +442,8 @@ export default function mount(root, ctx, rowsData, boundaries) {
         diff > 0 ? ' ▲' + diff : diff < 0 ? ' ▼' + -diff : ' —'
       rank.appendChild(delta)
     }
-    tip.style.left = Math.min(x + 16, 1140 - tip.offsetWidth - 8) + 'px'
+    tip.style.left =
+      Math.max(8, Math.min(x + 16, cardWidth - tip.offsetWidth - 8)) + 'px'
     tip.style.top = Math.max(8, y - 42) + 'px'
     tip.classList.add('on')
   }
@@ -396,18 +457,38 @@ export default function mount(root, ctx, rowsData, boundaries) {
 
   let first = true
   let yearTimer
+  let scrollTimer
+  let scrolling = false
+  let nextYear = year
+  let stepMs = 3200
+  const scrollContainer = root.closest('#outerPage')
   const yc = q('.yc')
   const yNum = q('.year-num .n')
-  function showYear(y, stepMs) {
+
+  function presentYear(y, duration) {
+    year = y
+    hideTip()
+    yNum.textContent = y
+    paint(y, duration)
+  }
+
+  function stopYearCard() {
     clearTimeout(yearTimer)
-    yc.getAnimations().forEach((a) => a.cancel())
+    yc.getAnimations().forEach((animation) => animation.cancel())
+  }
+
+  function showYear(y) {
+    stopYearCard()
     if (first || reduce) {
-      yNum.textContent = y
-      paint(y, 0)
+      presentYear(y, 0)
+      return
+    }
+    const riseMs = Math.min(850, 0.32 * stepMs)
+    if (mobile) {
+      presentYear(y, riseMs)
       return
     }
     const cardMs = Math.min(550, 0.22 * stepMs)
-    const riseMs = Math.min(850, 0.32 * stepMs)
     yc.animate(
       [
         { transform: 'translateY(0)', easing: 'cubic-bezier(.5,0,.9,.6)' },
@@ -420,30 +501,38 @@ export default function mount(root, ctx, rowsData, boundaries) {
       ],
       { duration: cardMs }
     )
-    // Update the map while the year card is still rising.
-    yearTimer = setTimeout(() => {
-      yNum.textContent = y
-      paint(y, riseMs)
-    }, cardMs * 0.45)
+    yearTimer = setTimeout(() => presentYear(y, riseMs), cardMs * 0.45)
   }
+
+  function onScroll(event) {
+    if (event.target !== document && event.target !== scrollContainer) return
+    if (!scrolling) {
+      scrolling = true
+      stopYearCard()
+      card.classList.add('map-scrolling')
+    }
+    clearTimeout(scrollTimer)
+    scrollTimer = setTimeout(() => {
+      scrolling = false
+      card.classList.remove('map-scrolling')
+      if (year !== nextYear) presentYear(nextYear, 0)
+    }, 180)
+  }
+  window.addEventListener('scroll', onScroll, { capture: true, passive: true })
+
   let wasPlaying = false
   tl.subscribe((s, changedYear) => {
-    year = s.year
+    nextYear = s.year
+    stepMs = s.stepMs || 3200
     card.classList.toggle('playing', s.playing)
-    if (changedYear) {
-      hideTip()
-      showYear(year, s.stepMs || 3200)
-      if (!s.playing) drawSnapshot()
-    } else if (wasPlaying && !s.playing) {
-      clearTimeout(yearTimer)
+    if (changedYear && !scrolling) showYear(nextYear)
+    if (wasPlaying && !s.playing) {
+      stopYearCard()
       card
         .getAnimations({ subtree: true })
         .forEach((animation) => animation.cancel())
-      if (String(year) !== yNum.textContent) {
-        yNum.textContent = year
-        paint(year, 0)
-      }
-      drawSnapshot()
+      if (!scrolling && year !== nextYear) presentYear(nextYear, 0)
+      if (snapshotContext) card.classList.add('map-static')
     }
     wasPlaying = s.playing
     q('.book .play').toggleAttribute('hidden', s.playing)
@@ -457,7 +546,10 @@ export default function mount(root, ctx, rowsData, boundaries) {
     )
   })
   return () => {
+    window.removeEventListener('scroll', onScroll, true)
     clearTimeout(yearTimer)
+    clearTimeout(scrollTimer)
+    clearTimeout(settleTimer)
     card
       .getAnimations({ subtree: true })
       .forEach((animation) => animation.cancel())

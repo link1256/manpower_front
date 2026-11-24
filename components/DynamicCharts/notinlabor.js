@@ -47,26 +47,31 @@ export default function mount(root, ctx, rowsData) {
       @keyframes nil-flip { from { transform: translateY(35%); opacity: 0; } to { transform: none; opacity: 1; } }
       @keyframes nil-pop { 0% { transform: scale(.6); opacity: .2; } 70% { transform: scale(1.12); } 100% { transform: none; opacity: 1; } }
       .nil .mobile-canister { display: none; }
-      .nil-mobile .mobile-canister { position: absolute; display: block; top: 12px; left: 8px; width: 404px; height: 206px;
-        pointer-events: none; z-index: 1; }
-      .nil-mobile .mobile-canister img { position: absolute; left: 50%; top: 50%; width: 206px; height: 404px;
-        transform: translate(-50%, -50%) rotate(-90deg); }
+      .nil-mobile .mobile-canister { position: absolute; display: block; top: 0; left: 0; width: 420px; height: 84px;
+        pointer-events: none; overflow: hidden; z-index: 1; background: url(${A}film-canister-mobile.svg) center / 100% 100% no-repeat; }
+      .nil-mobile .mobile-canister img { position: absolute; left: 268px; top: -2px; width: 80px; height: 183px;
+        transform: translate(-50%, -50%) rotate(90deg); }
       .nil-mobile .canister, .nil-mobile .nil-character, .nil-mobile .cats { display: none; }
-      .nil-mobile .film { left: 8px; top: 212px; width: 404px; height: 388px; overflow: hidden; background: #323744; }
-      .nil-mobile .film::before { content: ""; position: absolute; top: 0; left: 404px; width: 400px; height: 404px;
-        transform-origin: top left; transform: rotate(90deg); background: url(${A}film-tile.svg) left top / 202px 404px repeat-x; }
-      .nil-mobile .chart { left: 24px; top: 234px; width: 372px; height: 345px; }
-      .nil-mobile .chart svg { width: 372px; height: 332px; }
+      .nil-mobile .film { left: 26px; top: 77px; width: 358px; height: var(--film-length, var(--mobile-film-height));
+        background: #fff url(${A}film-tile-mobile.svg) center bottom / 100% 162px repeat-y; }
+      .nil-mobile .chart { left: 54px; top: 100px; width: 302px; height: calc(var(--mobile-plot-height) + 13px);
+        clip-path: inset(0 0 max(0px, calc(var(--mobile-plot-height) + 36px - var(--film-length, var(--mobile-film-height))))); }
+      .nil-mobile .chart svg { width: 302px; height: var(--mobile-plot-height); }
       .nil-mobile .unit { top: 6px; left: 4px; }
-      .nil-mobile .hits { left: 0; top: 38px; width: 368px; height: 248px; flex-direction: column; }
+      .nil-mobile .hits { left: 0; top: 38px; width: 302px; height: var(--mobile-rows-height); flex-direction: column; }
       .nil-mobile .hits button { width: 100%; height: auto; }
-      .nil-mobile .mobile-category { font: 700 15px var(--font); fill: #e8ebef; }
+      .nil-mobile .mobile-category { font: 700 14px var(--font); fill: #e8ebef; }
       .nil-mobile .val { font-size: 13px; }
-      .nil-mobile .ctl { top: 610px !important; }
+      .nil-mobile .tip { max-width: calc(100% - 16px); box-sizing: border-box; white-space: normal; }
+      .nil-mobile .ctl { top: calc(var(--mobile-film-height) + 91px) !important; }
       .nil-mobile [data-act="play"] { left: 36px !important; }
       .nil-mobile [data-act="speed"] { left: 176px !important; }
       .nil-mobile .stamp-outline { display: none; }
-      .nil-mobile .stamp { left: 330px; top: 617px; }
+      .nil-mobile .stamp { left: 330px; top: calc(var(--mobile-film-height) + 87px); width: 136px; height: 92px; box-sizing: border-box; padding: 10px 16px; align-items: center;
+        background: url(${A}stamp-frame.svg) center / 100% 100% no-repeat; }
+      .nil-mobile .stamp .l { font-size: 16px; line-height: 22px; }
+      .nil-mobile .stamp .yn { line-height: 38px; }
+      .nil-mobile .stamp .n { font-size: 39px; }
       @media (prefers-reduced-motion: reduce) { .nil .stamp .n.tick, .nil .speed-txt.tick { animation: none; } }
     `
   )
@@ -78,6 +83,11 @@ export default function mount(root, ctx, rowsData) {
     { name: '求學及準備升學', color: '#a9c8ec' },
     { name: '料理家務', color: '#f9c9a3' },
     { name: '高齡、身心障礙', color: '#a8ddc9' },
+    {
+      name: '想工作而未找工作且隨時可以開始工作',
+      lines: ['想工作而未找工作且', '隨時可以開始工作'],
+      color: '#c7addd'
+    },
     { name: '其他', color: '#f4b7c4' }
   ]
   const seriesByName = new Map(SERIES.map((series) => [series.name, series]))
@@ -104,11 +114,15 @@ export default function mount(root, ctx, rowsData) {
       1000,
       Math.ceil((d3.max(SERIES, (s) => s.v[y]) * 1.04) / 1000) * 1000
     )
-  const MOBILE_W = 372
-  const MOBILE_X0 = 127
-  const MOBILE_X1 = 323
+  const MOBILE_W = 302
+  const MOBILE_X0 = 9
+  const MOBILE_X1 = 253
   const MOBILE_TOP = 38
   const MOBILE_ROW = 62
+  const mobileRowsHeight = MOBILE_ROW * SERIES.length
+  const mobilePlotHeight = MOBILE_TOP + mobileRowsHeight + 46
+  const mobileFilmHeight = mobilePlotHeight + 56
+  const mobileStageHeight = mobileFilmHeight + 193
   const mobileY = (i) => MOBILE_TOP + (i + 0.5) * MOBILE_ROW
   const valueScale = (m) =>
     d3
@@ -122,11 +136,14 @@ export default function mount(root, ctx, rowsData) {
   const card = S.card
   card.classList.add('nil')
   card.classList.toggle('nil-mobile', mobile)
-  if (mobile) S.setSize(420, 710)
+  card.style.setProperty('--mobile-rows-height', mobileRowsHeight + 'px')
+  card.style.setProperty('--mobile-plot-height', mobilePlotHeight + 'px')
+  card.style.setProperty('--mobile-film-height', mobileFilmHeight + 'px')
+  if (mobile) S.setSize(420, mobileStageHeight)
   card.innerHTML = `
       <div class="abs" style="left:0;bottom:0;width:1140px;height:334px;overflow:hidden"><img class="abs" src="${A}bg.png" alt="" style="left:0;top:2.14%;width:100%;height:97.86%"></div>
       <div class="film" aria-hidden="true"></div>
-      <div class="mobile-canister" aria-hidden="true"><img src="${A}film-canister.svg" alt=""></div>
+      <div class="mobile-canister" aria-hidden="true"><img src="${A}canister-text.svg" alt=""></div>
       <div class="canister" aria-hidden="true">
         <div class="abs" style="left:-93px;top:115.5px;width:247px;height:415px;background:#f5c578"></div>
         <div class="abs" style="left:-101px;top:530.5px;width:262px;height:30px;border-radius:4px;background:#333"></div>
@@ -226,12 +243,12 @@ export default function mount(root, ctx, rowsData) {
       .attr('x1', mobile ? 0 : X0)
       .attr('x2', mobile ? 0 : X0 + PW)
       .attr('y1', mobile ? MOBILE_TOP : 0.5)
-      .attr('y2', mobile ? MOBILE_TOP + MOBILE_ROW * SERIES.length : 0.5)
+      .attr('y2', mobile ? MOBILE_TOP + mobileRowsHeight : 0.5)
       .attr('stroke-opacity', (d) => (d === 0 ? 0.45 : 0.14))
     groups
       .select('text')
       .attr('x', mobile ? 0 : 48)
-      .attr('y', mobile ? 308 : 4.5)
+      .attr('y', mobile ? 31 : 4.5)
       .attr('text-anchor', mobile ? 'middle' : 'end')
       .text(fmt)
     svg
@@ -240,8 +257,8 @@ export default function mount(root, ctx, rowsData) {
       .data(mobile ? SERIES : [])
       .join('text')
       .attr('class', 'mobile-category')
-      .attr('x', 4)
-      .attr('y', (d, i) => mobileY(i))
+      .attr('x', MOBILE_X0)
+      .attr('y', (d, i) => mobileY(i) - 15)
       .attr('dominant-baseline', 'middle')
       .text((d) => d.name)
   }
@@ -275,12 +292,12 @@ export default function mount(root, ctx, rowsData) {
     const position = (d) => scale(d.v[yr] ?? 0)
     barSel
       .attr('x', (d, i) => (mobile ? MOBILE_X0 : cx(i) - BAR_W / 2))
-      .attr('y', (d, i) => (mobile ? mobileY(i) - 13 : position(d)))
+      .attr('y', (d, i) => (mobile ? mobileY(i) + 1 : position(d)))
       .attr('width', (d) => (mobile ? position(d) - MOBILE_X0 : BAR_W))
       .attr('height', (d) => (mobile ? 26 : BASE - position(d) + 6))
     valSel
       .attr('x', (d, i) => (mobile ? position(d) + 5 : cx(i)))
-      .attr('y', (d, i) => (mobile ? mobileY(i) + 4 : position(d) - 9))
+      .attr('y', (d, i) => (mobile ? mobileY(i) + 18 : position(d) - 9))
       .attr('text-anchor', mobile ? 'start' : 'middle')
       .text((d) => (Number.isFinite(d.v[yr]) ? fmt(d.v[yr]) : '無資料'))
     hits.forEach((b, i) => {
@@ -325,7 +342,9 @@ export default function mount(root, ctx, rowsData) {
       const preferred = rowTop + MOBILE_ROW + 4
       tip.style.left = Math.max(8, MOBILE_W - w - 8) + 'px'
       tip.style.top =
-        (preferred + h <= 332 ? preferred : Math.max(8, rowTop - h - 4)) + 'px'
+        (preferred + h <= mobilePlotHeight
+          ? preferred
+          : Math.max(8, rowTop - h - 4)) + 'px'
       band
         .attr('x', 0)
         .attr('y', rowTop)
@@ -389,27 +408,31 @@ export default function mount(root, ctx, rowsData) {
 
   function applyFilm(fraction, opacity) {
     const min = mobile ? 12 : FILM_MIN
-    const max = mobile ? 388 : FILM_W
-    film.style[mobile ? 'height' : 'width'] =
-      (min + (max - min) * fraction).toFixed(1) + 'px'
+    const max = mobile ? mobileFilmHeight : FILM_W
+    const length = (min + (max - min) * fraction).toFixed(1) + 'px'
+    if (mobile) card.style.setProperty('--film-length', length)
+    else film.style.width = length
     chart.style.opacity = opacity.toFixed(3)
   }
 
   function setGeometry() {
-    svg.attr('viewBox', mobile ? '0 0 372 332' : '0 0 904 334')
+    svg.attr(
+      'viewBox',
+      mobile ? `0 0 ${MOBILE_W} ${mobilePlotHeight}` : '0 0 904 334'
+    )
     svg
       .select('clipPath rect')
       .attr('width', mobile ? MOBILE_W : W)
-      .attr('height', mobile ? 332 : BASE)
+      .attr('height', mobile ? mobilePlotHeight : BASE)
   }
   setGeometry()
 
   function onViewportChange(event) {
     mobile = event.matches
     card.classList.toggle('nil-mobile', mobile)
-    S.setSize(mobile ? 420 : 1140, mobile ? 710 : 694)
+    S.setSize(mobile ? 420 : 1140, mobile ? mobileStageHeight : 694)
     film.style.removeProperty('width')
-    film.style.removeProperty('height')
+    card.style.removeProperty('--film-length')
     setGeometry()
     const displayed = shown
     shown = null
