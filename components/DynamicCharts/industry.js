@@ -59,9 +59,9 @@ export default function mount(root, ctx, rowsData) {
       .ind .cal-page .sheet { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
       .ind .cal-page .leaf { background: #f4eae4; border-radius: 0 0 6px 6px; transform-origin: 50% 0; box-shadow: 0 1px 2px rgba(0,0,0,.1); will-change: transform, opacity; }
       .ind .cal-page .lbl { position: absolute; left: 0; top: 5px; width: 100%; text-align: center; font: 700 20px/27px var(--font); color: #37474f; }
-      .ind .cal-page .num { position: absolute; left: 50%; top: 21px; height: 64px; transform: translateX(-50%); display: flex; align-items: baseline; color: #37474f; font-weight: 700; white-space: nowrap; }
+      .ind .cal-page .num { position: absolute; inset: 21px 0 auto; height: 64px; display: flex; align-items: baseline; justify-content: center; gap: 5px; color: #37474f; font-weight: 700; white-space: nowrap; }
       .ind .cal-page .num .n { font-size: 48px; line-height: 64px; font-variant-numeric: tabular-nums; }
-      .ind .cal-page .num .u { position: absolute; left: calc(100% + 5px); top: 28px; font-size: 20px; }
+      .ind .cal-page .num .u { font-size: 20px; }
       .ind-controls { display: contents; }
       .ind-mobile .ind-deco, .ind-mobile .ico { display: none; }
       .ind-mobile .ind-ground { height: 54% !important; }
